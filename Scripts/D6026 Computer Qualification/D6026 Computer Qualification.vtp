@@ -1,0 +1,29 @@
+﻿
+[SystemSettings]
+Version=18.5
+Description=
+
+[ProjectProfile]
+AccexIni=extend\accex.ini
+AttributesIni=extend\attributes.ini
+JavaexIni=extend\javaex.ini
+DomexIni=extend\domex.ini
+AxextIni=extend\axext.ini
+ProjectIni=D6026 Computer Qualification.ini
+
+[ProjectScript]
+Source=GX_COM-1.t
+Source=GX_CREATE-1.t
+Source=GX_ERROR-1.t
+Source=GX_GEN-1.t
+Source=GX_LANGUAGE-1.t
+Source=GX_LIS-1.t
+Source=GX_MATH-1.t
+Source=GX_SECURITY-1.t
+Source=GX_USER-1.t
+EndFolder=TRUE
+
+[ProjectFrame]
+Source=..\..\Common Libraries\MasterFrame.inc
+Source=..\..\Common Libraries\MasterUseStmts.inc
+EndFolder=TRUE
