@@ -1,0 +1,46 @@
+﻿[ ] use "..\..\Common Libraries\MasterUseStmts.inc"
+[ ] 
+[-] BackupGXDatabase()
+	[ ] // Backup of the database
+	[ ] GeneXpert®DxSystem.SetActive( )
+	[ ] GeneXpert®DxSystem.User.Exit.Pick()
+	[ ] sleep(1)
+	[ ] DatabaseManagement.Yes.Click()
+	[ ] sleep(1)
+	[ ] DatabaseManagement.SelectTaskClickProceedT2.Select( "Database Backup" )
+	[ ] DatabaseManagement.Proceed.Click()
+	[ ] DatabaseBackup.SetActive( )
+	[ ] DatabaseBackup.FileName.SetSelRange( 1, 1, 1, 47 )
+	[ ] DatabaseBackup.FileName.SetText( rConfig.sBackupName)
+	[ ] DatabaseBackup.Save.Click()
+	[ ] sleep(1)
+	[-] if ReplaceFile.Exists()
+		[ ] ReplaceFile.SetActive( )
+		[ ] ReplaceFile.Yes.Click()
+	[-] if DatabaseBackupDialog.OK.Exists(120)
+		[ ] DatabaseBackupDialog.OK.Click()
+		[ ] DatabaseManagement.Cancel.Click()
+[ ] 
+[ ] 
+[-] RestoreFunc()
+	[ ] GeneXpert®DxSystem.SetActive( )
+	[ ] GeneXpert®DxSystem.User.Exit.Pick()
+	[ ] sleep(1)
+	[ ] DatabaseManagement.Yes.Click()
+	[ ] sleep(1)
+	[ ] DatabaseManagement.SelectTaskClickProceedT2.Select( "Database Restore" )
+	[ ] DatabaseManagement.Proceed.Click()
+	[ ] DatabaseRestore.SetActive( )
+	[ ] DatabaseRestore.Proceed.Click()
+	[ ] SelectFileToRestoreTheDat.SetActive( )
+	[ ] SelectFileToRestoreTheDat.FileName.SetText(rConfig.sRestoreName)
+	[ ] SelectFileToRestoreTheDat.Open.Click()
+	[ ] DatabaseRestore1.Cancel.Click()
+	[-] if DatabaseRestore.OK.Exists(120)
+		[ ] DatabaseRestore.SetActive( )
+		[ ] DatabaseRestore.OK.Click()
+	[ ] sleep(3)
+	[ ] 
+	[ ] CompareDBVersion(rConfig.iDBMajor, rConfig.iDBMinor, rConfig.iDBBuild, rConfig. iDBFix)
+[ ] 
+[ ] 

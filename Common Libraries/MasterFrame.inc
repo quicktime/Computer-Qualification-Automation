@@ -1,0 +1,1927 @@
+﻿[ ] Window wMainWindow = GeneXpertDx
+[ ] 
+[-] dll "user32"
+	[ ] int BringWindowToTop(int hwnd)
+[ ] 
+[ ] use "extend\javaex.inc"
+[ ] use "extend\OpenAgentIncludes.inc"
+[ ] 
+[ ] // Constant Files
+[ ] use "..\Common Libraries\constants\Constants.inc"
+[ ] 
+[ ] // *** Global variables ***
+[ ] CONFIG_MAIN rConfig = {...}
+[ ] handle hdbc, hConfig
+[ ] BOOLEAN bValidStart = false
+[ ] BOOLEAN bConfigValues = false
+[ ] STRING sUserID = ' '
+[ ] STRING sPassWord = ' '
+[ ] STRING gsDSNConfig = "DSN=Silk DDA Excel;DBQ=C:\Silk Data Files\ConfigMaster.xls;UID=;PWD=;"
+[ ] const CLOAKED = 'CLOAKED'
+[ ] const UNCLOAKED = 'UNCLOAKED'
+[ ] 
+[ ] 
+[-] type CONFIG_MAIN is record
+	[ ] STRING sProjectNumber
+	[ ] STRING sExecType
+	[ ] STRING sMyDir
+	[ ] STRING sMyCmdLine
+	[ ] STRING sMyCmdLineCloaked
+	[ ] STRING sCepheidPassword
+	[ ] STRING sRestoreName
+	[ ] STRING sBackupName
+[ ] 
+[-] void ChangeAgent(String sAgent)
+	[ ] DisconnectAll()
+	[ ] Connect("(local)",CLASSIC_AGENT)
+	[ ] Connect("(local)",OPEN_AGENT)
+	[ ] List of HANDLE lhAgents = GetConnected()
+	[ ] HANDLE hAgent
+	[-] for each hAgent in lhAgents
+		[-] if(GetMachineAgentType(hAgent) == sAgent)
+			[ ] SetMachine(hAgent)
+			[ ] print(GetMachineAgentType())
+			[ ]  break
+[ ] 
+[ ] // Function will find and terminate process with specified name as precautionary measure
+[-] KillTask(STRING sArg)
+	[ ] print()
+	[ ] print("Attempting to kill process {sArg} as a precaution")
+	[ ] LIST of STRING ls={}
+	[ ] print("Attempting to kill {sArg} x86")
+	[ ] SYS_Execute("tskill {sArg}",ls)
+	[ ] listprint(ls)
+	[ ] print()
+	[ ] print("Attempting to kill {sArg} x64")
+	[ ] SYS_Execute("mklink C:\windows\cmd64.exe C:\Windows\System32\cmd.exe",ls)
+	[ ] listprint(ls)
+	[ ] SYS_Execute("cmd64 /c tskill {sArg}",ls)
+	[ ] listprint(ls)
+	[ ] print()
+[ ] 
+[ ] 
+[ ] 
+[ ] // Main Application
+[-] window JFrame GeneXpertDx
+	[ ] locator "/JFrame[@caption='GeneXpert® Dx System']"
+	[ ] 
+	[-] void SetActive( )
+		[ ] BringWindowToTop(GeneXpertDx.GetHandle())
+		[ ] // PRINT(GeneXpertDx.GetHandle())
+		[ ] // print("Set Dx Active")
+	[ ] 
+	[-] JButton OkButton
+		[ ] locator "//JButton[@caption='OK']"
+	[-] JButton CancelButton
+		[ ] locator "//JButton[@caption='Cancel']"
+	[-] JButton YesButton
+		[ ] locator "//JButton[@caption='Yes']"
+	[-] JButton NoButton
+		[ ] locator "//JButton[@caption='No']"
+	[-] JButton ProceedButton
+		[ ] locator "//JButton[@caption='Proceed']"
+	[ ] 
+	[-] JButton OpenButton
+		[ ] locator "//JButton[@caption='Open']"
+	[ ] 
+	[ ] // EDIT button for Inf
+	[-] JButton EditButton
+		[ ] locator "//JButton[@caption='EDIT']"
+	[-] JButton SaveButton
+		[ ] locator "//JButton[@caption='Save']"
+	[-] JButton CloseButton
+		[ ] locator "//JButton[@caption='Close']"
+		[ ] 
+	[-] JButton ImportButton
+		[ ] locator "//JButton[@caption='Import']"
+		[ ] 
+		[ ] 
+	[-] JButton ExportButton
+		[ ] // locator "//JButton[@caption='EXPORT']"
+		[ ] locator "//JButton[@caption='Export']"
+		[ ] 
+	[ ] 
+	[-] JButton AddUserButton
+		[ ] locator "//JButton[@caption='Add']"
+		[ ] 
+	[-] JButton UserAdmininstrationButton
+		[ ] locator "//JButton[@caption='USER ADMINISTRATION']"
+		[ ] 
+		[ ] 
+	[+] //NEW----------------------------------------
+		[ ] 
+		[ ] 
+		[ ] 
+		[ ] 
+	[ ] //Dialogs
+	[+] JDialog DatabaseManagementDialog
+		[ ] locator "/JDialog[@caption='Database Management']"
+		[-] JButton YesButton // added by JG 8/14/17
+			[ ] locator "//JButton[@caption='Yes']"
+		[-] JButton NoButton// added by JG 8/14/17
+			[ ] locator "//JButton[@caption='No']"
+			[ ] 
+		[ ] 
+		[-] JLabel SelectTaskLabel
+			[ ] locator "//JLabel[@caption='Select task, click [Proceed] to continue.']"
+		[ ] 
+		[-] JRadioButton DatabaseBackupRadioButtom
+			[ ] locator "//[@caption='Database Backup']"
+		[ ] 
+		[-] JRadioButton DatabaseRestoreRadioButton
+			[ ] locator "//JRadioButton[@caption='Database Restore']"
+		[ ] 
+		[-] JRadioButton CompactDatabaseRadioButtom
+			[ ] locator "//[@caption='Compact Database']"
+		[ ] 
+		[-] JRadioButton CheckDatabaseIntegrityRadioButtom
+			[ ] locator "//[@caption='Check Database Integrity']"
+		[ ] 
+		[-] // JButton ProceedButton
+			[ ] // locator "//JButton[@caption='Proceed']"
+		[ ] 
+		[-] JButton ProceedButton
+			[ ] locator "//JButton[@caption='Proceed']"
+		[ ] // /JFrame[@caption='GeneXpert® Dx System']/JDialog[@caption='Database Management']//JButton[@caption='Proceed']
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+		[ ] 
+		[ ] 
+		[ ] 
+		[ ] 
+		[ ] 
+	[+] JDialog ScanCartridgeBarcodeDialog // Added Dialog Identifier and Button JG 7/31/17
+		[ ] locator "//JDialog[@caption='Scan Cartridge Barcode']" //end of addition
+		[ ] 
+	[+] JDialog DatabaseRestoreDialog
+		[ ] locator "/JDialog[@caption='Database Restore']"
+		[-] JButton ProceedButton
+			[ ] locator "//JButton[@caption='Proceed']"
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+	[ ] 
+	[+] JDialog ImportAssayDialog
+		[ ] locator "/JDialog[@caption='Import Assay']"
+		[-] JButton ImportButton
+			[ ] locator "//JButton[@caption='Import']"
+		[-] STRING getText()
+			[ ] String s=""
+			[-] do
+				[ ] s=find("//JLabel").DynamicInvoke("getText")
+				[ ] s=s+CHR(10)+find("//JLabel[@caption!='{s}']").DynamicInvoke("getText")
+			[-] except
+				[ ] 
+			[ ] return (s)
+			[ ] 
+	[ ] 
+	[-] JDialog ExportDataDialog
+		[ ] locator "/JDialog[@caption='Export Data']"
+		[-] JButton ExportButton
+			[ ] locator "//JButton[@caption='Export']"
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+		[-] JTable TestResultsTable
+			[ ] locator "//JTable[@className='TestPanel$2']"
+		[-] JCheckBox OpticalData
+			[ ] locator "//JCheckBox[@caption='Optical Data']"
+		[-] JCheckBox MeltData
+			[ ] locator "//JCheckBox[@caption='Melt Data']"
+		[-] JCheckBox HeaterTemperature
+			[ ] locator "//JCheckBox[@caption='Heater Temperature']"
+		[-] JCheckBox Pressure
+			[ ] locator "//JCheckBox[@caption='Pressure']"
+		[-] JCheckBox UltrasonicHornAmplitude
+			[ ] locator "//JCheckBox[@caption='Ultrasonic Horn Amplitude, Frequency and Duty Cycle']"
+		[-] JCheckBox AnalysisSettings
+			[ ] locator "//JCheckBox[@caption='Analysis Settings']"
+		[-] JCheckBox TestResult
+			[ ] locator "//JCheckBox[@caption='Test Result']"
+		[ ] 
+		[ ] // Renamed as TestResultsTable above Steve 4/21/2016
+		[-] // JTable _d2
+			[ ] // locator "@className='_d$2'"
+	[ ] 
+	[-] JDialog ResultExportDialog
+		[ ] locator "/JDialog[@caption='Result Export']"
+		[-] JButton SaveButton
+			[ ] locator "//JButton[@caption='Save']"
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+		[-] JLabel FileName
+			[ ] locator "File Name:"
+		[-] JTextField FileNameTextField
+			[ ] locator "//JTextField[@priorlabel='File Name:']"
+	[ ] 
+	[-] JDialog ReplaceFileDialog
+		[ ] locator "/JDialog[@caption='Replace File?']"
+		[-] JButton YesButton
+			[ ] locator "//JButton[@caption='Yes']"
+		[-] JButton NoButton
+			[ ] locator "//JButton[@caption='No']"
+		[ ] 
+	[ ] 
+	[-] JDialog ExportTestDataDialog
+		[ ] locator "Export Test Data"
+		[-] // JLabel UnableToExportTheAmountOf
+			[ ] // locator "Unable to export the amount of data for the selected test(s)."
+		[-] // JLabel PleaseSelectFewerTestsAnd
+			[ ] // locator "Please select fewer tests and retry export."
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[+] JDialog UserAdministrationDialog
+		[ ] locator "/JDialog[@caption='User Administration']"
+		[+] JPanel Panel
+			[ ] locator "/JPanel"
+		[+] JPanel CepheidButtonPanel
+			[ ] locator "@className='CepheidButtonPanel'"
+		[+] JButton Add
+			[ ] locator "Add"
+		[+] JLabel Label
+			[ ] locator "//JLabel"
+		[+] JButton Remove
+			[ ] locator "Remove"
+		[+] JLabel Label2
+			[ ] locator "[2]"
+		[+] JButton Edit
+			[ ] locator "Edit"
+		[+] JLabel Label3
+			[ ] locator "[3]"
+		[+] JButton Close
+			[ ] locator "Close"
+		[+] JPanel Panel2
+			[ ] locator "/JPanel/JPanel[2]"
+		[+] JScrollPane ScrollPane
+			[ ] locator "//JScrollPane"
+		[+] JViewport Viewport
+			[ ] locator "//JViewport"
+		[+] JTable Table
+			[ ] locator "//JTable"
+		[+] JViewport Viewport2
+			[ ] locator "[2]"
+		[+] JTableHeader TableHeader
+			[ ] locator "//JTableHeader"
+		[-] JTable UserList
+			[ ] locator "//JTable"
+			[-] INTEGER GetRowCount()
+				[ ] return RowCount
+			[-] INTEGER GetColumnCount()
+				[ ] return ColumnCount
+			[ ] 
+	[ ] 
+	[-] JDialog LoginDialog
+		[ ] locator "/JDialog[@caption='Login']"
+		[+] JPanel Panel
+			[ ] locator "/JPanel"
+		[+] JPanel Panel2
+			[ ] locator "/JPanel/JPanel"
+		[+] JPanel Panel3
+			[ ] locator "/JPanel/JPanel/JPanel"
+		[+] JLabel UserName
+			[ ] locator "User Name"
+		[+] JLabel Password
+			[ ] locator "Password"
+		[+] JTextField UserNameTextField
+			[ ] locator "@priorlabel='User Name'"
+		[+] JPasswordField PasswordPasswordField
+			[ ] locator "@priorlabel='Password'"
+		[+] JPanel Panel4
+			[ ] locator "/JPanel/JPanel[2]"
+		[+] JPanel Panel5
+			[ ] locator "/JPanel/JPanel[2]/JPanel"
+		[+] JButton OK
+			[ ] locator "OK"
+		[+] JButton Cancel
+			[ ] locator "Cancel"
+	[ ] 
+	[+] // JDialog DatabaseManagementDialog
+		[ ] // locator "/JDialog[@caption='Database Management']"
+		[+] // JButton YesButton
+			[ ] // locator "//JButton[@caption='Yes']"
+		[ ] // 
+		[-] // JButton NoButton
+			[ ] // locator "//JButton[@caption='No']"
+		[ ] // 
+		[-] // JLabel SelectTaskLabel
+			[ ] // locator "//JLabel[@caption='Select task, click [Proceed] to continue.']"
+		[ ] // 
+		[-] // JRadioButton DatabaseBackupRadioButtom
+			[ ] // locator "//[@caption='Database Backup']"
+		[ ] // 
+		[-] // JRadioButton DatabaseRestoreRadioButtom
+			[ ] // locator "//[@caption='Database Restore']"
+		[ ] // 
+		[-] // JRadioButton CompactDatabaseRadioButtom
+			[ ] // locator "//[@caption='Compact Database']"
+		[ ] // 
+		[-] // JRadioButton CheckDatabaseIntegrityRadioButtom
+			[ ] // locator "//[@caption='Check Database Integrity']"
+		[ ] // 
+		[-] // JButton ProceedButton
+			[ ] // locator "//JButton[@caption='Proceed']"
+		[ ] // 
+		[-] // JButton CancelButton
+			[ ] // locator "//JButton[@caption='Cancel']"
+		[ ] // 
+		[ ] // 
+		[ ] // 
+	[ ] 
+	[-] JDialog CreateTestWorkspace
+		[ ] locator "//JDialog[@caption='Create Test']"
+		[ ] 
+		[-] JComboBox SelectAssayComboBox
+			[ ] locator "//JComboBox[@priorlabel='Name']"
+			[ ] 
+		[-] JDialog ScanCartridgeBarcodeDialog // Added Dialog Identifier and Button JG 7/31/17
+			[ ] locator "//JDialog[@caption='Scan Cartridge Barcode']"
+			[ ] 
+			[-] JButton ManualEntryButton
+				[ ] locator "//JButton[@caption='Manual Entry']" //End of addition by JG 7/31/17
+				[ ] 
+		[-] JDialog ManualCartridgeBarcodeEntryDialog // Added Dialog Identifier  JG 7/31/17
+				[ ] locator "//JDialog[@caption='Manual Cartridge Barcode Entry']"
+				[ ] 
+			[-] JButton OKButton
+				[ ] locator "//JButton[@caption='OK']"//End of Addition JG 7/31/17
+				[ ] 
+		[-] JTextField CartridgeBarcodeTextField// Added Text field JG 7/31/17
+				[ ] locator "//JTextField[@priorlabel='Cartridge Barcode']" 
+				[ ] 
+				[-] JButton OKButton
+					[ ] locator "//JButton[@caption='OK']"//End of Addition JG 7/31/17
+					[ ] 
+		[-] JDialog SampleIDNotFoundDialog// Added Dialog Identifier  JG 7/31/17
+				[ ]  locator "//JDialog[@caption='Create Test']"//End of Addition JG 7/31/17
+				[ ] 
+				[-] JButton SampleIDNotFoundOK
+					[ ] locator "//JButton[@caption='OK']"
+					[ ] 
+		[-] JComboBox SelectModuleComboBox
+			[ ] locator "//JComboBox[@priorlabel='Select Module']"
+			[ ] 
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+			[ ] 
+		[-] JButton StartTestButton
+			[ ] locator "//JButton[@caption='Start Test']"
+			[ ] 
+		[-] JTextField CartridgeSerialNumberTextField
+			[ ] locator "//JTextField[@priorlabel='Cartridge S/N']"
+			[ ] 
+		[-] JTextField ReagentLotIDTextField
+			[ ] locator "//JTextField[@priorlabel='Reagent Lot ID']"
+			[ ] 
+		[-] JTextField SampleIDTextField// Added Text field JG 7/31/17
+			[ ] locator "//JTextField[@priorlabel='Sample ID']"
+			[ ] 
+			[-] STRING getText()
+				[ ] return DynamicInvoke("getText")
+				[ ] 
+		[-] JTextArea TextAreaQuery// Added TextArea JG 7/31/17
+			[ ] locator "//JTextArea[@priorlabel='Host Test Order Table']"
+			[ ] 
+			[-] STRING getText()
+				[ ] return DynamicInvoke("getText")//End of addition JG 7/31/17
+		[ ] 
+		[ ] 
+	[ ] 
+	[+] JDialog SystemMemoryUsageAlert
+		[ ] locator "/JDialog[@caption='System Memory Usage Alert']"
+		[-] // JLabel PleaseRestartTheGeneXpertD
+			[ ] // locator "Please restart the GeneXpert Dx System when convenient for optimal operation."
+		[-] // JLabel TheCurrentMemoryUsageHasR
+			[ ] // locator "The current memory usage has reached 86% of the maximum memory setting of 148MB."
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[-] // JDialog MissingReagentLotWorkspace
+		[ ] // locator "Create Test[2]"
+		[-] // JLabel MissingReagentLotText
+			[ ] // locator "Missing reagent lot."
+		[-] // JavaJFCImage OptionPaneIconLabel
+			[ ] // locator "#1"
+		[-] // JButton OKButton
+			[ ] // locator "//JButton[@caption='OK']"
+	[ ] 
+	[-] JDialog MissingReagentLotWorkspace
+		[ ] locator "/JDialog[@caption='Create Test[1]']"
+		[-] JLabel MissingReagentLotText
+			[ ] locator "//JLabel[@caption='Missing reagent lot.']"
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[+] JDialog CartridgeSNUsedWorkspace
+		[ ] locator "/JDialog[@caption='Create Test[3]']"
+		[-] JLabel CartridgeSerialNumber19896
+			[ ] locator "//JLabel[@caption='Cartridge serial number * has already been used.']"
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[ ] // Dialog for the Rollback error Steve 6/2/2012
+	[+] JDialog StartTestWorkspace
+		[ ] locator "/JDialog[@caption='Start Test']"
+		[-] JLabel CannotStartTestRollbackS
+			[ ] locator "Cannot start test rollback() should not be called while in auto-commit mode."
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[-] JDialog SelectTestSToBeArchivedWorkspace
+		[ ] locator "/JDialog[@caption='Select Test(s) To Be Archived']"
+		[-] JButton SelectAllButton
+			[ ] locator "//JButton[@caption='Select All']"
+		[-] JButton DeselectAllButton
+			[ ] locator "//JButton[@caption='Deselect All']"
+		[-] JButton SelectHighlightedButton
+			[ ] locator "//JButton[@caption='Select Highlighted']"
+		[-] JButton DeselectHighlightedButton
+			[ ] locator "//JButton[@caption='Deselect Highlighted']"
+		[-] JCheckBox SelectNewArchiveButton
+			[ ] locator "//JButton[@caption='Select New Archive']"
+		[-] JTable TestResultsTable
+			[ ] locator "//JTable[@className='TestPanel$2']"
+		[-] JVerticalScrollBar JVerticalScrollBar
+			[ ] locator "//JVerticalScrollBar"
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+	[ ] 
+	[+] JDialog ArchiveTestsWorkspace
+		[ ] locator "/JDialog[@caption='Archive Test(s)']"
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+		[-] JButton Proceed
+			[ ] locator "//JButton[@caption='Proceed']"
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[+] JDialog SaveDialog
+		[ ] locator "/JDialog[@caption='Save']"
+		[-] JLabel SaveIn
+			[ ] locator "//JLabel[@caption='Save In:']"
+		[-] JComboBox SaveInComboBox
+			[ ] locator "//JComboBox[@priorlabel='Save In:']"
+		[-] JButton UpOneLevelButton
+			[ ] locator "//JButton[@accessibleName='Up']"
+		[-] JButton Desktop
+			[ ] locator "//JButton[@accessibleName='Home']"
+		[-] JButton CreateNewFolderButton
+			[ ] locator "//JButton[@accessibleName='New Folder']"
+		[-] JToggleButton ListToggleButton
+			[ ] locator "//JToggleButton[@accessibleName='List']"
+		[-] JToggleButton DetailsToggleButton
+			[ ] locator "//JToggleButton[@accessibleName='Details']"
+		[-] JList ListFilesList
+			[ ] locator "//JList[@className='FilePane$4']"
+		[-] JLabel FileNameLabel
+			[ ] locator "//JLabel[@caption='File Name:']"
+		[-] JLabel FileNameTextField
+			[ ] locator "//JTextField[@priorlabel='File Name:']"
+		[-] JLabel FilesOfTypeLabel
+			[ ] locator "//JLabel[@caption='Files of Type:']"
+		[-] JComboBox FilesOfTypeComboBox
+				[ ] locator "//JComboBox[@priorlabel='Files of Type:']"
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+		[-] JButton SaveButton
+			[ ] locator "//JButton[@caption='Save']"
+	[ ] 
+	[+] JDialog Open
+		[ ] locator "/JDialog[@caption='Open']"
+		[-] JLabel LookIn
+			[ ] locator "//JLabel[@caption='Look In:']"
+		[-] JComboBox LookInComboBox
+			[ ] locator "//JComboBox[@priorlabel='Look In:']"
+		[-] JButton UpOneLevelButton
+			[ ] locator "//JButton[@accessibleName='Up']"
+		[-] JButton Desktop
+			[ ] locator "//JButton[@accessibleName='Home']"
+		[-] JButton CreateNewFolderButton
+			[ ] locator "//JButton[@accessibleName='New Folder']"
+		[-] JToggleButton ListToggleButton
+			[ ] locator "//JToggleButton[@accessibleName='List']"
+		[-] JToggleButton DetailsToggleButton
+			[ ] locator "//JToggleButton[@accessibleName='Details']"
+		[-] JList ListFilesList
+			[ ] locator "//JList[@className='FilePane$4']"
+		[-] JLabel FileNameLabel
+			[ ] locator "//JLabel[@caption='File Name:']"
+		[-] JTextField FileNameTextField
+			[ ] locator "//JTextField[@priorlabel='File Name:']"
+		[-] JLabel FilesOfTypeLabel
+			[ ] locator "//JLabel[@caption='Files of Type:']"
+		[-] JComboBox FilesOfTypeComboBox
+				[ ] locator "//JComboBox[@priorlabel='Files of Type:']"
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+		[-] JButton OpenButton
+			[ ] locator "//JButton[@caption='Open']"
+	[ ] 
+	[-] JDialog SelectTestSToBeRetrievedWorkspace
+		[ ] locator "/JDialog[@caption='Select Test(s) To Be Retrieved From *']"
+		[-] JButton SelectAllButton
+			[ ] locator "//JButton[@caption='Select All']"
+		[-] JButton DeselectAllButton
+			[ ] locator "//JButton[@caption='Deselect All']"
+		[-] JButton SelectHighlightedButton
+			[ ] locator "//JButton[@caption='Select Highlighted']"
+		[-] JButton DeselectHighlightedButton
+			[ ] locator "//JButton[@caption='Deselect Highlighted']"
+		[-] JCheckBox SelectwithNoDupsButton
+			[ ] locator "//JButton[@caption='Select With No Duplicates']"
+		[-] JTable TestResultsTable
+			[ ] locator "//JTable[@className='TestPanel$2']"
+		[-] JVerticalScrollBar JVerticalScrollBar
+			[ ] locator "//JVerticalScrollBar"
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+		[ ] 
+		[ ] 
+	[ ] 
+	[+] JDialog RetrieveTestDuplicates
+		[ ] locator "/JDialog[@caption='Retrieve Test(s)']"
+		[-] JLabel DuplicateTestSSelectedText
+			[ ] locator "* duplicate test(s) selected for retrieve will be shown in red color."
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[+] JDialog RetrieveTestConfirmation
+		[ ] locator "/JDialog[@caption='Retrieve Test(s)']"
+		[-] // JavaJFCStaticText ATotalOf1TestSHaveBeen
+			[ ] // locator "A total of *"
+		[-] // JavaJFCStaticText N1TestSAlreadyExistInThe
+			[ ] // locator "* test(s) already exist in the current database with the same test results."
+		[-] // JavaJFCStaticText ThisWillOVERWRITEAllDuplic
+			[ ] // locator "This will OVERWRITE all duplicate test(s) in the database and retrieve non-duplicate test(s)."
+		[-] // JavaJFCStaticText WouldYouLikeToContinueTex
+			[ ] // locator "Would you like to continue?"
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+		[-] JButton ProceedButton
+			[ ] locator "//JButton[@caption='Proceed']"
+	[ ] 
+	[+] JDialog RetrieveTestSuccessfulWorkspace
+		[ ] locator "/JDialog[@caption='Retrieve Test(s)']"
+		[-] // JavaJFCStaticText N1TestSSuccessfullyRetriev
+			[ ] // locator "* test(s) successfully retrieved."
+		[-] // JavaJFCStaticText RetrievalDetailsAreLoggedI
+			[ ] // locator "Retrieval details are logged in C:\GeneXpert\Database_log\Retrieve_log_*.txt"
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[-] JDialog SelectTestsToBeUploaded
+		[ ] locator "/JDialog[@caption='Select Test(s) To Be Uploaded To Host']"
+		[-] JTable TestResultsTable
+			[ ] locator "//JTable[@className='TestPanel$2']"
+		[-] JButton CloseButton
+			[ ] locator "//JButton[@caption='Close']"
+		[-] JButton UploadButton
+			[ ] locator "//JButton[@caption='Upload']"
+		[-] JButton SelectAll
+			[ ] locator "//JButton[@caption='Select All']"
+		[-] JButton DeselectAll
+			[ ] locator "//JButton[@caption='Deselect All']"
+		[-] JButton SelectHighlighted
+			[ ] locator "//JButton[@caption='Select Highlighted']"
+		[-] JButton DeselectHighlighted
+			[ ] locator "//JButton[@caption='Deselect Highlighted']"
+		[-] JButton SelectAllPending
+			[ ] locator "//JButton[@caption='Select All Pending']"
+	[ ] 
+	[+] JDialog NoTestsSelectedDialog
+		[ ] locator "/JDialog[@caption='No Test(s) Selected']"
+		[-] JLabel PleaseSelectATestToUploadText
+			[ ] locator "//JLabel[@caption='Please select a test to upload.']"
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[-] JDialog TestReportWorkspace
+		[ ] locator "/JDialog[@caption='Test Report']"
+		[-] JButton GenerateReportFileButton
+			[ ] locator "//JButton[@caption='Generate Report File']"
+		[-] JButton PreviewPDFButton
+			[ ] locator "//JButton[@caption='Preview PDF']"
+		[-] JButton CloseButton
+			[ ] locator "//JButton[@caption='Close']"
+		[-] JButton AnalyteResultButton
+			[ ] locator "//JButton[@caption='Analyte Result']"
+		[-] JCheckBox DetailsCheckBox
+			[ ] locator "//JCheckBox[@caption='Detail']"
+		[-] JCheckBox MeltPeaksCheckBox
+			[ ] locator "//JCheckBox[@caption='Melt Peaks']"
+		[-] JCheckBox ErrorDetailsCheckBox
+			[ ] locator "//JCheckBox[@caption='Error Details']"
+		[-] JCheckBox TroubleshootCheckBox
+			[ ] locator "//JCheckBox[@caption='Troubleshoot']"
+		[-] JCheckBox MessagesCheckBox
+			[ ] locator "//JCheckBox[@caption='Messages']"
+		[-] JCheckBox HistoryCheckBox
+			[ ] locator "//JCheckBox[@caption='History']"
+		[-] JTable TestResultsTable
+			[ ] locator "//JTable[@className='TestPanel$2']"
+		[-] JVerticalScrollBar JVerticalScrollBar
+			[ ] locator "//JVerticalScrollBar"
+	[ ] 
+	[+] JDialog GenerateReportFile
+		[ ] locator "/JDialog[@caption='Generate Report File']"
+		[+] JPanel Panel
+			[ ] locator "/JPanel"
+		[+] JComponent CepheidFilePicker
+			[ ] locator "@className='CepheidFilePicker'"
+		[+] JPanel Panel2
+			[ ] locator "//JComponent[@className='CepheidFilePicker']/JPanel"
+		[+] JPanel Panel3
+			[ ] locator "//JComponent[@className='CepheidFilePicker']/JPanel/JPanel"
+		[+] JButton Button
+			[ ] locator "//JButton"
+		[+] JComponent BoxFiller
+			[ ] locator "@className='Box$Filler'"
+		[+] JButton Button2
+			[ ] locator "[2]"
+		[+] JComponent BoxFiller2
+			[ ] locator "[@className='Box$Filler'][2]"
+		[+] JButton Button3
+			[ ] locator "[3]"
+		[+] JComponent BoxFiller3
+			[ ] locator "[@className='Box$Filler'][3]"
+		[+] JToggleButton ToggleButton
+			[ ] locator "//JToggleButton"
+		[+] JToggleButton ToggleButton2
+			[ ] locator "[2]"
+		[+] JLabel SaveIn
+			[ ] locator "Save In:"
+		[+] JComboBox SaveInComboBox
+			[ ] locator "@priorlabel='Save In:'"
+		[+] JPanel Panel4
+			[ ] locator "//JComponent[@className='CepheidFilePicker']/JPanel[2]"
+		[+] JPanel FilePane
+			[ ] locator "@className='FilePane'"
+		[+] JPanel Panel5
+			[ ] locator "//JPanel[@className='FilePane']/JPanel"
+		[+] JScrollPane ScrollPane
+			[ ] locator "//JScrollPane"
+		[+] JViewport Viewport
+			[ ] locator "//JViewport"
+		[+] JList FilePane4
+			[ ] locator "@className='FilePane$4'"
+		[+] JPanel Panel6
+			[ ] locator "//JComponent[@className='CepheidFilePicker']/JPanel[4]"
+		[+] JPanel Panel8
+			[ ] locator "[8]"
+		[+] JLabel FileName
+			[ ] locator "File Name:"
+		[+] JTextField FileNameTextField
+			[ ] locator "@priorlabel='File Name:'"
+		[+] JComponent BoxFiller4
+			[ ] locator "[@className='Box$Filler'][4]"
+		[+] JPanel Panel9
+			[ ] locator "[9]"
+		[+] JLabel FilesOfType
+			[ ] locator "Files of Type:"
+		[+] JComboBox FilesOfTypeComboBox
+			[ ] locator "@priorlabel='Files of Type:'"
+		[+] JPanel Panel10
+			[ ] locator "[10]"
+		[+] JButton Save
+			[ ] locator "Save"
+		[+] JButton Cancel
+			[ ] locator "Cancel"
+	[ ] 
+	[+] JDialog TestReportNoTestSelectedDialog
+		[ ] locator "/JDialog[@caption='Test Report'][2]"
+		[-] JLabel PleaseSelectATestText
+			[ ] locator "Please select a test."
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[+] JDialog TestReportUnableToCreateDialog
+		[ ] locator "/JDialog[@caption='Test Report[2]']"
+		[-] JLabel UnableToCreateReportTest
+			[ ] locator "Unable to create report ?Test Report?."
+		[-] JButton OKButton
+			[ ] locator "//JButton[@caption='OK']"
+	[ ] 
+	[-] JDialog GenerateReportFileWorkspace
+		[ ] locator "/JDialog[@caption='Generate Report File']"
+		[-] JLabel SaveInLabel
+			[ ] locator "//JLabel[@caption='Save In:']"
+		[-] JComboBox SaveInComboBox
+			[ ] locator "//JComboBox[@priorlabel='Save In:']"
+		[-] JButton UpOneLevelButton
+			[ ] locator "//JButton[@accessibleName='Up']"
+		[-] JButton Desktop
+			[ ] locator "//JButton[@accessibleName='Home']"
+		[-] JButton CreateNewFolderButton
+			[ ] locator "//JButton[@accessibleName='New Folder']"
+		[-] JToggleButton ListToggleButton
+			[ ] locator "//JToggleButton[@accessibleName='List']"
+		[-] JToggleButton DetailsToggleButton
+			[ ] locator "//JToggleButton[@accessibleName='Details']"
+		[-] JList ListFilesList
+			[ ] locator "//JList[@className='FilePane$4']"
+		[-] JLabel FileNameLabel
+			[ ] locator "//JLabel[@caption='File Name:']"
+		[-] JTextField FileNameTextField
+			[ ] locator "//JTextField[@priorlabel='File Name:']"
+		[-] JLabel FilesOfTypeLabel
+			[ ] locator "//JLabel[@caption='Files of Type:']"
+		[-] JComboBox FilesOfTypeComboBox
+				[ ] locator "//JComboBox[@priorlabel='Files of Type:']"
+		[-] JButton CancelButton
+			[ ] locator "//JButton[@caption='Cancel']"
+		[-] JButton SaveButton
+			[ ] locator "//JButton[@caption='Save']"
+	[ ] 
+	[+] JDialog ReplaceFile
+		[ ] locator "/JDialog[@caption='Replace File?']"
+		[+] JPanel Panel
+			[ ] locator "/JPanel"
+		[+] JComponent JOptionPane
+			[ ] locator "@className='JOptionPane'"
+		[+] JPanel Panel2
+			[ ] locator "//JComponent[@className='JOptionPane']/JPanel"
+		[+] JPanel Panel3
+			[ ] locator "[3]"
+		[+] JPanel Panel4
+			[ ] locator "[4]"
+		[+] JPanel Panel5
+			[ ] locator "[5]"
+		[+] JLabel FileCGeneXpertReportDEMO_Q1_2Targs3PdfAlreadyExists
+			[ ] locator "@caption='File [C:\GeneXpert\report\DEMO_Q1_2Targs3.pdf] already exists.'"
+		[+] JLabel DoYouWantToReplaceIt
+			[ ] locator "Do you want to replace it?"
+		[+] JLabel Label
+			[ ] locator "[3]"
+		[+] JPanel Panel6
+			[ ] locator "//JComponent[@className='JOptionPane']/JPanel[2]"
+		[+] JButton Yes
+			[ ] locator "Yes"
+		[+] JButton No
+			[ ] locator "No"
+	[ ] 
+	[+] JDialog ExportData
+		[ ] locator "/JDialog[@caption='Export Data']"
+		[+] JPanel Panel
+			[ ] locator "/JPanel"
+		[+] JPanel Panel2
+			[ ] locator "/JPanel/JPanel"
+		[+] JLabel ExportSelectionForQualifiedAssays
+			[ ] locator "Export Selection (For Qualified Assays)"
+		[+] JCheckBox AnalysisSettings
+			[ ] locator "Analysis Settings"
+		[+] JCheckBox TestResult
+			[ ] locator "Test Result"
+		[+] JCheckBox OpticalData
+			[ ] locator "Optical Data"
+		[+] JCheckBox MeltData
+			[ ] locator "Melt Data"
+		[+] JCheckBox Pressure
+			[ ] locator "Pressure"
+		[+] JCheckBox UltrasonicHornAmplitudeFrequencyAndDutyCycle
+			[ ] locator "Ultrasonic Horn Amplitude, Frequency and Duty Cycle"
+		[+] JCheckBox HeaterTemperature
+			[ ] locator "Heater Temperature"
+		[+] JPanel TestPanel
+			[ ] locator "@className='TestPanel'"
+		[+] JScrollPane ScrollPane
+			[ ] locator "//JScrollPane"
+		[+] JViewport Viewport
+			[ ] locator "//JViewport"
+		[-] JTable TestPanel2
+			[ ] locator "@className='TestPanel$2'"
+		[+] JVerticalScrollBar VerticalScrollBar
+			[ ] locator "//JVerticalScrollBar"
+		[+] JViewport Viewport2
+			[ ] locator "[2]"
+		[-] JTableHeader TableHeader
+			[ ] locator "//JTableHeader"
+		[+] JPanel Panel3
+			[ ] locator "/JPanel/JPanel[3]"
+		[+] JPanel CepheidButtonPanel
+			[ ] locator "@className='CepheidButtonPanel'"
+		[+] JButton SelectAll
+			[ ] locator "Select All"
+		[+] JLabel Label
+			[ ] locator "//JPanel[@className='CepheidButtonPanel']/JLabel"
+		[+] JButton DeselectAll
+			[ ] locator "Deselect All"
+		[+] JLabel Label2
+			[ ] locator "//JPanel[@className='CepheidButtonPanel']/JLabel[2]"
+		[+] JButton SelectHighlighted
+			[ ] locator "Select Highlighted"
+		[+] JLabel Label3
+			[ ] locator "//JPanel[@className='CepheidButtonPanel']/JLabel[3]"
+		[+] JButton DeselectHighlighted
+			[ ] locator "Deselect Highlighted"
+		[+] JPanel CepheidButtonPanel2
+			[ ] locator "[@className='CepheidButtonPanel'][2]"
+		[+] JButton Export
+			[ ] locator "Export"
+		[+] JLabel Label4
+			[ ] locator "//JPanel[@className='CepheidButtonPanel'][2]/JLabel"
+		[+] JButton Cancel
+			[ ] locator "Cancel"
+	[ ] 
+	[+] // JDialog ResultExport
+		[ ] // locator "/JDialog[@caption='Result Export']"
+		[+] // JPanel Panel
+			[ ] // locator "/JPanel"
+		[+] // JComponent CepheidFilePicker
+			[ ] // locator "@className='CepheidFilePicker'"
+		[+] // JPanel Panel2
+			[ ] // locator "//JComponent[@className='CepheidFilePicker']/JPanel"
+		[+] // JPanel Panel3
+			[ ] // locator "//JComponent[@className='CepheidFilePicker']/JPanel/JPanel"
+		[+] // JButton Button
+			[ ] // locator "//JButton"
+		[+] // JComponent BoxFiller
+			[ ] // locator "@className='Box$Filler'"
+		[+] // JButton Button2
+			[ ] // locator "[2]"
+		[+] // JComponent BoxFiller2
+			[ ] // locator "[@className='Box$Filler'][2]"
+		[+] // JButton Button3
+			[ ] // locator "[3]"
+		[+] // JComponent BoxFiller3
+			[ ] // locator "[@className='Box$Filler'][3]"
+		[+] // JToggleButton ToggleButton
+			[ ] // locator "//JToggleButton"
+		[+] // JToggleButton ToggleButton2
+			[ ] // locator "[2]"
+		[+] // JLabel SaveIn
+			[ ] // locator "Save In:"
+		[+] // JComboBox SaveInComboBox
+			[ ] // locator "@priorlabel='Save In:'"
+		[+] // JPanel Panel4
+			[ ] // locator "//JComponent[@className='CepheidFilePicker']/JPanel[2]"
+		[+] // JPanel FilePane
+			[ ] // locator "@className='FilePane'"
+		[+] // JPanel Panel5
+			[ ] // locator "//JPanel[@className='FilePane']/JPanel"
+		[+] // JScrollPane ScrollPane
+			[ ] // locator "//JScrollPane"
+		[+] // JViewport Viewport
+			[ ] // locator "//JViewport"
+		[+] // JList FilePane4
+			[ ] // locator "@className='FilePane$4'"
+		[+] // JPanel Panel6
+			[ ] // locator "//JComponent[@className='CepheidFilePicker']/JPanel[4]"
+		[+] // JPanel Panel8
+			[ ] // locator "[8]"
+		[+] // JLabel FileName
+			[ ] // locator "File Name:"
+		[+] // JTextField FileNameTextField
+			[ ] // locator "@priorlabel='File Name:'"
+		[+] // JComponent BoxFiller4
+			[ ] // locator "[@className='Box$Filler'][4]"
+		[+] // JPanel Panel9
+			[ ] // locator "[9]"
+		[+] // JLabel FilesOfType
+			[ ] // locator "Files of Type:"
+		[+] // JComboBox FilesOfTypeComboBox
+			[ ] // locator "@priorlabel='Files of Type:'"
+		[+] // JPanel Panel10
+			[ ] // locator "[10]"
+		[+] // JButton Save
+			[ ] // locator "Save"
+		[+] // JButton Cancel
+			[ ] // locator "Cancel"
+	[ ] 
+	[ ] // Created below JDialog Brendan 11/02/17
+	[-] JDialog ReagentLotSpecificParameters
+		[ ] locator "/JDialog[@caption='Reagent Lot Specific Parameters']"
+		[-] JButton ImportButton
+			[ ] locator "//JButton[@caption='Import']"
+	[ ] 
+	[ ] 
+	[ ] // Tables
+	[-] JTable TestsSinceLaunchTable
+			[ ] locator "//JTable[@className='si']"
+	[ ] 
+	[ ] 
+	[ ] // Menus:
+	[-] JMenu UserMenu
+		[ ] locator "/JMenu[@caption='User']"
+		[-] JMenuItem Exit
+				[ ] locator "./JMenuItem[@caption='Exit']"
+		[-] JMenuItem Login
+				[ ] locator "./JMenuItem[@caption='Login']"
+	[ ] 
+	[-] JMenu SetupMenu
+		[ ] locator "/JMenu[@caption='Setup']"
+		[-] JMenuItem SystemConfiguration
+				[ ] locator "./JMenuItem[@caption='System Configuration']"
+		[-] JMenuItem UserAdministration
+			[ ] locator "//JMenuItem[@caption='User Administration']"
+	[ ] 
+	[-] JMenu DataManagementMenu
+		[ ] locator "/JMenu[@caption='Data Management']"
+		[-] JMenuItem ArchiveTest
+				[ ] locator "./JMenuItem[@caption='Archive Test']"
+		[-] JMenuItem RetrieveTest
+				[ ] locator "./JMenuItem[@caption='Retrieve Test']"
+	[ ] 
+	[ ] //WS buttons
+	[-] JToggleButton DefineAssaysButton
+		[ ] locator "//JToggleButton[@caption='Define Assays']"
+	[-] JToggleButton ViewResultsToggleButton
+		[ ] locator "//JToggleButton[@caption='View Results']"
+	[-] JButton CreateTestButton
+		[ ] locator "//JButton[@caption='Create Test']"
+	[-] JToggleButton CheckStatusButton
+		[ ] locator "//JToggleButton[@caption='Check Status']"
+	[ ] 
+	[ ] // Workspaces:
+	[ ] 
+	[-] JFrame ViewResultsWorkspace
+		[-] JLabel TestResult
+			[ ] locator "Test Result"
+		[-] // JTextArea TextArea
+			[ ] // locator "//JPanel[@className='ResultReporterPanel']//JTextArea"
+		[+] JTextArea SampleIDTextField
+			[ ] locator "//JTextArea[@priorlabel='Sample ID']"
+			[-] STRING getText()
+				[ ] return DynamicInvoke("getText")
+			[-] BOOLEAN IsEditable()
+				[ ] return Editable
+			[ ] 
+			[-] INTEGER GetFontSize()
+				[ ] 
+				[ ] return  (DynamicInvokeMethods({"getFont","getSize"},{{},{}}))
+			[ ] 
+			[-] STRING GetText()
+				[ ] return DynamicInvoke("getText")
+		[ ] 
+		[+] JTextArea PatientIDTextField
+			[ ] locator "//JTextArea[@priorlabel='Patient ID']"
+			[-] STRING getText()
+				[ ] return DynamicInvoke("getText")
+			[-] BOOLEAN IsEditable()
+				[ ] return Editable
+			[ ] 
+		[ ] 
+		[-] JTextField ErrorStatusTextField
+			[ ] locator "//JTextField[@priorlabel='Error Status']"
+			[-] STRING GetText()
+					[ ] return DynamicInvoke("getText")
+		[ ] 
+		[-] JTextField TestStatusTextField
+			[ ] locator "//JTextField[@priorlabel='Status']"
+			[-] STRING GetText()
+					[ ] return DynamicInvoke("getText")
+		[ ] 
+		[-] JTextField AssayTypeTextField
+			[ ] locator "//JTextField[@priorlabel='Assay Type']"
+			[-] STRING GetText()
+					[ ] return DynamicInvoke("getText")
+					[ ] 
+		[-] JTextField ReagentLotIDTextField
+			[ ] locator "//JTextField[@priorlabel='Reagent Lot ID*']"
+			[-] STRING GetText()
+					[ ] return DynamicInvoke("getText")
+					[ ] 
+		[-] JTextField ExpirationDateTextField
+			[ ] locator "//JTextField[@priorlabel='Expiration Date*']"
+			[ ] 
+		[-] JTextField CartridgeSNTextField
+			[ ] locator "//JTextField[@priorlabel='Cartridge S/N*']"
+			[ ] 
+		[-] JTextField ModuleSNTextField
+			[ ] locator "//JTextField[@priorlabel='Module S/N']"
+			[ ] 
+		[-] JTextField ModuleNameTextField
+			[ ] locator "//JTextField[@priorlabel='Module Name']"
+			[ ] 
+		[-] JTextField InstrumentSNTextField
+			[ ] locator "//JTextField[@priorlabel='Instrument S/N']"
+		[ ] 
+		[-] JTextField SWVersionTextField
+			[ ] locator "//JTextField[@priorlabel='S/W Version']"
+		[ ] 
+		[-] JTextField OtherSampleTypeTextField
+			[ ] locator "//JTextField[@priorlabel='Other Sample Type']"
+			[-] STRING GetText()
+					[ ] return DynamicInvoke("getText")
+		[ ] 
+		[-] JComboBox SampleTypeComboBox
+			[ ] locator "//JComboBox[@priorlabel='Sample Type']"
+			[ ] 
+		[-] JComboBox TestTypeComboBox
+			[ ] locator "//JComboBox[@priorlabel='Test Type']"
+			[-] STRING getSelectedText()
+				[ ] return DynamicInvoke("GetSelectedText")
+			[ ] 
+		[-] JTextField UserNameTextField
+			[ ] locator "//JTextField[@priorlabel='User']"
+			[-] STRING GetText()
+					[ ] return DynamicInvoke("getText")
+			[ ] 
+		[-] JTextArea NotesTextArea
+			[ ] locator "//JTextArea[@priorlabel='Notes']"
+			[ ] 
+		[-] JTextField StartTimeTextField
+			[ ] locator "//JTextField[@priorlabel='Start Time']"
+			[ ] 
+		[-] JTextField EndTimeTextField
+			[ ] locator "//JTextField[@priorlabel='End Time']"
+		[ ] 
+		[+] JTabbedPane ResultViewTabbedPane
+			[ ] //locator "//JPanel[@className='zt']/JTabbedPane"
+			[ ] locator "//JTabbedPane"
+		[+] JEditorPane TestResultTextPane
+			[ ] locator "//JEditorPane" 
+			[-] LIST OF STRING GetMultiText()
+				[ ] LIST OF STRING ls= {}
+				[ ] STRING sAll=DynamicInvoke("getText")
+				[ ] STRING sLine=""
+				[ ] 
+				[ ] INTEGER i=1
+				[-] while (GetField(sAll,CHR(10),i) !="" )
+					[ ] sLine=GetField(sAll,CHR(10),i)
+					[ ] ListAppend(ls,sLine)
+					[ ] i++
+				[ ] 
+				[ ] 
+				[ ] 
+				[ ] return ls
+			[ ] 
+		[-] JTable ResultsTable
+			[ ] locator "//JTable"
+			[ ] 
+			[-] INTEGER GetRowCount()
+				[ ] return RowCount
+			[-] INTEGER GetColumnCount()
+				[-] return ColumnCount
+					[ ] 
+		[ ] 
+		[ ] 
+		[+] JButton ViewTestButton
+			[ ] locator "//JButton[@caption='View Test']"
+			[ ] 
+		[+] JButton UploadTestButton
+			[ ] locator "//JButton[@caption='Upload Test']"
+			[ ] 
+		[+] JButton ReportButton
+			[ ] locator "//JButton[@caption='Report']"
+			[ ] 
+		[+] JDialog SelectTestDialog
+			[ ] locator "/JDialog[@caption='Select Test To Be Viewed']"
+			[ ] 
+			[-] JTable SelectTestTable
+				[ ] locator "//JTable" //[@className='_d$2']
+			[-] JButton OkButton
+				[ ] locator "//JButton[@caption='OK']"
+		[ ] 
+		[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[+] JDialog SystemConfigurationWorkspace
+		[ ] locator "/JDialog[@caption='System Configuration']"
+		[ ] 
+		[-] JTabbedPane Tabs
+			[ ] locator "//JTabbedPane"
+		[ ] 
+		[-] JTable TestsSinceLaunchTable
+			[ ] locator "//JTable[@className='si']"
+	[-] JTable ModulesTable
+		[ ] locator "//JTable[@className='JTableSorted']"
+	[ ] 
+	[+] /// OLD-----------------------------
+		[ ] 
+		[ ] 
+		[ ] 
+	[+] JButton DatabaseRestoreButton
+		[ ] locator "//JButton[@caption='DATABASE RESTORE']"
+	[+] JButton DatabaseBackupButton
+		[ ] locator "//JButton[@caption='DATABASE BACKUP']"
+		[ ] 
+	[ ] 
+	[+] JTextField AssayVersionTextField
+		[ ] locator "//JTextField[@priorlabel='Version']"
+		[-] STRING GetText()
+				[ ] return DynamicInvoke("getText")
+		[ ] 
+	[ ] 
+	[+] JTextField AssayNameTextField
+		[ ] locator "//JTextField[@priorlabel='Assay']"
+		[-] STRING GetText()
+				[ ] return DynamicInvoke("getText")
+	[ ] 
+	[-] JTextArea DisclaimerText
+			[ ] locator "//JPanel[@className='ResultReporterPanel']//JTextArea"
+			[ ] 
+		[-] BOOLEAN IsEditable()
+			[ ] return Editable
+			[ ] 
+		[-] INTEGER GetFontSize()
+			[ ] 
+			[ ] return  (DynamicInvokeMethods({"getFont","getSize"},{{},{}}))
+			[ ] 
+		[-] STRING GetText()
+			[ ] return DynamicInvoke("getText")
+	[ ] 
+	[ ] 
+	[ ] 
+	[-] JTabbedPane TestResult
+		[ ] locator "//JPanel[@className='ResultReporterPanel']/JScrollPane[2]"
+		[ ] 
+		[-] JTextArea Disclaimer
+			[ ] locator "//JPanel[@className='ResultReporterPanel']//JTextArea"
+			[ ] 
+			[-] BOOLEAN IsEditable()
+				[ ] return Editable
+			[ ] 
+			[-] INTEGER GetFontSize()
+				[ ] 
+				[ ] return  (DynamicInvokeMethods({"getFont","getSize"},{{},{}}))
+			[ ] 
+			[-] STRING GetText()
+				[ ] return DynamicInvoke("getText")
+		[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] // Error handling used by D8383,D14863 and D8381
+	[-] JTable ErrorsTable
+		[ ] locator "//JTable"
+		[-] INTEGER GetRowCount()
+			[ ] return RowCount
+		[-] INTEGER GetColumnCount()
+			[-] return ColumnCount
+				[ ] 
+	[ ] 
+	[-] // JTable ErrorTable
+		[ ] // locator "//JTable"
+	[ ] 
+	[ ] 
+	[+] JTable AssayCartridgeLSPTable
+		[ ] locator "//JPanel[@className='byp']/JScrollPane[@className='bnm']/JViewport/JTable"
+		[-] INTEGER GetRowCount()
+			[ ] return RowCount
+		[-] INTEGER GetColumnCount()
+			[-] return ColumnCount
+				[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[+] JTable MeltPeaksTable
+		[ ] locator "//JTable"
+		[ ] //locator "//JTable/JFrame[@caption='GeneXpert® Dx System']//JTable"
+		[ ] //locator "//JTable[2]"
+		[ ] 
+		[-] INTEGER GetRowCount()
+			[ ] return RowCount
+		[-] INTEGER GetColumnCount()
+			[-] return ColumnCount
+				[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[-] JComboBox CartridgeComboBox
+		[ ] locator "//JComboBox[@priorlabel='Cartridge']"
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[+] JTable ViewAnotherTestTable
+		[ ] locator "//JPanel[@className='cgu']/JScrollPane[@className='bnm']/JViewport/JTable"
+		[ ] 
+	[+] JTable ManageAssaysTable
+		[ ] locator "//JPanel[@className='by6']/JScrollPane[@className='bnm']/JViewport/JTable"
+		[ ] 
+		[ ] 
+		[ ] 
+	[+] JButton SetupButton
+		[ ] locator "//JButton[@caption='SETUP']"
+		[ ] 
+	[-] JButton SystemConfigurationButton
+		[ ] locator "//JButton[@caption='SYSTEM CONFIGURATION']"
+		[ ] 
+	[-] JButton ArchiveSettingsButton
+		[ ] locator "//JButton[@caption='ARCHIVE SETTINGS']"
+	[ ] 
+	[+] JButton ManageAssaysButton
+		[ ] locator "//JButton[@caption='MANAGE ASSAYS']"
+	[ ] 
+	[-] JButton LotSpecificParamtersButton
+		[ ] locator "//JButton[@caption='Lot']"
+		[ ] 
+		[ ] 
+	[-] JComboBox QuantUnitComboBox
+		[ ] locator "//JComboBox[@priorlabel='Quantitative Result Unit']"
+		[ ] 
+		[ ] 
+	[+] JButton ReportButton
+		[ ] locator "//JButton[@caption='REPORT']"
+		[ ] 
+	[+] JButton GenerateReportFileButton
+		[ ] locator "//JButton[@caption='GENERATE REPORT FILE']"
+		[ ] 
+	[+] JCheckBox IncludeAmplificationCurveCB
+		[ ] locator "//JCheckBox[@caption='Include Amplification Curve']"
+		[ ] 
+	[-] JButton DataManagentButton
+		[ ] locator "//JButton[@caption='DATA MANAGEMENT']"
+		[ ] 
+	[+] JButton RetreiveTestButton
+		[ ] locator "//JButton[@caption='RETRIEVE TEST']"
+		[ ] 
+	[+] JCheckBox ExportMeltDataCheckBox
+		[ ] locator "//JCheckBox[@caption='Melt Data']"
+		[ ] 
+	[+] JButton SelectAllButton
+		[ ] locator "//JButton[@caption='SELECT ALL']"
+		[ ] 
+		[ ] 
+		[ ] 
+	[+] JButton LoginButton
+		[ ] locator "//JPanel[@className='bl4']/JButton[@className='blw']"
+		[ ] 
+		[ ] 
+	[+] JButton ExitButton
+		[ ] locator "//JPanel[@className='bl4']/JButton[@className='blw'][4]"
+		[ ] 
+		[ ] 
+	[+] JTextField LoginTextField
+		[ ] locator "//JTextField[@priorlabel='User Name']"
+	[+] JTextField PasswordTextField
+		[ ] locator "//JTextField[@priorlabel='Password']"
+	[+] JTextField ConfirmPasswordTextField
+		[ ] locator "//JTextField[@priorlabel='Confirm Password']"
+	[-] JComboBox UserTypeComboBox
+		[ ] locator "//JComboBox[@priorlabel='User Type']"
+	[ ] 
+	[ ] 
+	[-] JTextField FileNameTextField
+		[ ] locator "//JTextField[@priorlabel='File Name:']"
+		[-] STRING GetText()
+				[ ] return DynamicInvoke("getText")
+		[ ] 
+	[ ] 
+	[+] JRadioButton ManualArchiveRadioButton
+		[ ] locator "//JRadioButton[@caption='Manually']"
+	[ ] 
+	[ ] 
+	[+] JLabel TestsSinceLaunchText
+		[ ] locator "//JLabel[@caption='Tests Since Launch']"
+	[ ] 
+	[ ] // Notification Test Area for Inf
+	[-] JTextArea NotificationTextArea
+		[ ] locator "//JTextArea"
+		[-] STRING GetText()
+				[ ] return DynamicInvoke("getText")
+		[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[+] JToggleButton DefineAssays
+		[ ] locator "Define Assays"
+	[+] JTabbedPane TabbedPane
+		[ ] locator "//JPanel[@className='zt']/JTabbedPane"
+	[+] JTable Table
+		[ ] locator "//JTable"
+	[+] JButton Export
+		[ ] locator "Export"
+	[-] JDialog ResultExport
+		[ ] locator "/JDialog[@caption='Result Export']"
+		[-] JButton Save
+			[ ] locator "Save"
+[ ] 
+[-] window MainWin AdobeReader
+	[ ] locator "*Adobe Acrobat Reader*"
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[-] window JavaMainWin DataInjection
+	[ ] locator "/AWTFrame[@caption='Data Injection']"
+	[-] JButton StartDataInjection
+		[ ] locator "/JButton[@caption='Start Data Injection']"
+	[-] JList JavaxSwingJList
+		[ ] locator "//JList"
+		[-] LIST OF STRING GetContents()
+			[ ] return DataInjection.JavaxSwingJList.Items
+	[-] JButton Close
+		[ ] locator "/JButton[@caption='Close']"
+[ ] 
+[ ] 
+[ ] 
+[-] window JavaMainWin GXTestSummary
+	[ ] locator "/JFrame[@caption='GeneXpert® Test Summary']"
+	[ ] 
+	[-] JDialog TestSummaryReplaceFileDialog
+		[ ] locator "/JDialog[@caption='Replace File?']"
+		[-] JButton YesButton
+			[ ] locator "//JButton[@caption='Yes']"
+			[ ] 
+	[-] JDialog ExportTestData //added by jg 8/16/17
+		[ ] locator "//JDialog[@caption='Export Test Data']"
+		[-] JButton OkButton
+			[ ] locator "//JButton[@caption='OK']"
+	[-] JTable TestTable
+		[ ] locator "//JTable[@className='ny$2']"
+		[ ] 
+	[-] JButton SelectAllButton
+		[ ] locator "//JButton[@caption='Select All']"
+	[ ] 
+	[-] JButton AdvancedButton
+		[ ] locator "//JButton[@caption='Advanced >>>']"
+	[ ] 
+	[-] JButton GenerateTestSummaryButton
+		[ ] locator "//JButton[@caption='Generate Test Summary']"
+	[ ] 
+	[ ] // Classic Agent equivalent was never replaced
+	[-] JDialog GenerateTestSummaryDialog
+		[ ] locator "//JDialog[@caption='Generate Test Summary']"
+	[ ] 
+	[-] JDialog TestSummary
+		[ ] locator "//JDialog[@caption='Test Summary']"
+	[ ] 
+	[ ] //Filename 
+	[-] JTextField Filename 
+		[ ] locator "//JTextField[@priorlabel='File Name:']"
+	[ ] 
+	[-] JButton CloseButton
+		[ ] locator "//JButton[@caption='Close']"
+	[-] JDialog TestSummarySaveDialog
+		[ ] locator "//JDialog[@caption='Test Summary']"
+		[ ] 
+		[ ] 
+		[-] JLabel Processtext
+			[ ] locator "//JLabel[@caption='Process Test(s) *']"
+		[ ] //SaveButton
+		[-] JButton SaveButton
+			[ ] locator "//JButton[@caption='Save']"
+		[ ] //Filename 
+		[-] JTextField Filename 
+			[ ] locator "//JTextField[@priorlabel='File Name:']"
+			[-] STRING GetText()
+					[ ] return DynamicInvoke("getText")
+	[ ] //trying to get replacefile dialog to autoclose edits by jg 8/14/17
+[ ] 
+[ ] 
+[ ] 
+[-] window MainWin AdobeReaderWindow
+	[ ] locator "/JFrame[@caption='*Adobe Acrobat Reader*']"
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] // Generically launches SW
+[-] appstate MyBaseState () basedon none
+	[ ] // 
+	[ ] // This will start the application with no users defined in the system so that the logon screen does not appear
+	[ ] //
+	[ ] 
+	[ ] 
+	[-] if !bConfigValues
+		[ ] GetConfigValues()
+	[ ] 
+	[ ] Agent.SetOption (OPT_VERIFY_EXPOSED, FALSE)
+	[ ] KillTask("java")
+	[ ] 
+	[ ] wMainWindow = GeneXpertDx
+	[ ] 
+	[ ] 
+	[-] switch Upper(rConfig.sExecType)
+		[-] case CLOAKED
+			[ ] bValidStart = true
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 10)
+			[ ] wMainWindow.Start(rConfig.sMyCmdLineCloaked, rConfig.sMyDir)
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 5)
+			[ ] 
+		[-] case UNCLOAKED
+			[ ] bValidStart = true
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 120)
+			[ ] wMainWindow.Start(rConfig.sMyCmdLine, rConfig.sMyDir)
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 5)
+		[-] default
+			[ ] print("The only valid command line parameter are 'CLOAKED' or 'UNCLOAKED'")
+	[ ] 
+	[ ] 
+[ ] 
+[-] appstate DataInjectionBaseState () basedon none
+	[ ] // 
+	[ ] // This will start the application with no users defined in the system so that the logon screen does not appear
+	[ ] //
+	[ ] 
+	[ ] KillTask("java")
+	[ ] 
+	[ ] Agent.SetOption (OPT_VERIFY_EXPOSED, FALSE)
+	[ ] 
+	[ ] 
+	[-] if !bConfigValues
+		[ ] GetConfigValues()
+		[ ] 
+	[-] wMainWindow = DataInjection
+		[ ] 
+	[ ] 
+	[-] switch Upper(rConfig.sExecType)
+		[-] case CLOAKED
+			[ ] bValidStart = true
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 10)
+			[ ] wMainWindow.Start(rConfig.sMyCmdLineCloaked, rConfig.sMyDir)
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 5)
+			[ ] 
+		[-] case UNCLOAKED
+			[ ] bValidStart = true
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 120)
+			[ ] wMainWindow.Start(rConfig.sMyCmdLine, rConfig.sMyDir)
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 5)
+		[-] default
+			[ ] print("The only valid command line parameter are 'CLOAKED' or 'UNCLOAKED'")
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+[ ] 
+[ ] 
+[-] appstate TestSummaryBaseState () basedon none
+	[ ] // 
+	[ ] // This will start the application with no users defined in the system so that the logon screen does not appear
+	[ ] //
+	[ ] 
+	[ ] print("Launching the GX Test Summary Tool")
+	[ ] KillTask("java")
+	[ ] Agent.SetOption (OPT_VERIFY_EXPOSED, FALSE)
+	[ ] 
+	[ ] 
+	[-] if !bConfigValues
+		[ ] GetConfigValues()
+		[ ] 
+	[-] wMainWindow = GXTestSummary //DataInjection
+		[ ] 
+	[ ] 
+	[-] switch Upper(rConfig.sExecType)
+		[-] case CLOAKED
+			[ ] bValidStart = true
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 20)
+			[ ] wMainWindow.Start(rConfig.sMyCmdLineCloaked, rConfig.sMyDir)
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 10)
+			[ ] 
+		[-] case UNCLOAKED
+			[ ] bValidStart = true
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 120)
+			[ ] wMainWindow.Start(rConfig.sMyCmdLine, rConfig.sMyDir)
+			[ ] Agent.SetOption (OPT_WINDOW_TIMEOUT, 5)
+		[-] default
+			[ ] print("The only valid command line parameter are 'CLOAKED' or 'UNCLOAKED'")
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] // Gets software launched and to Xpertise Home Screen
+[-] appstate DxBaseState () basedon MyBaseState
+	[ ] sleep (3)
+	[ ] wMainWindow.SetActive( )
+	[ ] 
+	[-] if GeneXpertDx.LoginTextField.Exists(20)
+		[ ] GeneXpertDx.LoginTextField.SetText('cepheid')
+		[ ] GeneXpertDx.PasswordTextField.SetText(rConfig.sCepheidPassword)
+		[ ] sleep(2)
+		[ ] GeneXpertDx.OkButton.Click()
+		[ ] sleep(5)
+		[ ] 
+	[ ] // If at DB reminders
+	[-] if GeneXpertDx.YesButton.Exists(20)
+		[ ] GeneXpertDx.NoButton.Click()
+		[-] if ! ( GeneXpertDx.TestsSinceLaunchText.Exists(20) ) 
+			[-] if GeneXpertDx.NotificationTextArea.Exists(15)
+				[ ] sleep(2)
+				[-] if MatchStr("*is overdue*",GeneXpertDx.NotificationTextArea.DynamicInvoke("getText"))
+					[ ] print("The test archive reminder appeared while starting up")
+					[ ] print(GeneXpertDx.NotificationTextArea.DynamicInvoke("getText"))
+					[ ] GeneXpertDx.NoButton.Click()
+				[ ] 
+				[ ] sleep(2)
+				[-] if ! ( GeneXpertDx.TestsSinceLaunchText.Exists(30) ) 
+					[ ] LogError("GX Infinity 80 application failed to launch even after waiting for other reminders")
+					[ ] @ ("$StopRunning") ()
+			[-] else
+				[ ] LogError("GX Infinity 80 application failed to launch")
+				[ ] @ ("$StopRunning") ()
+		[-] else
+			[ ] // Perform tasks
+[ ] 
+[ ] 
+[-] appstate SystemConfiguration () basedon DxBaseState
+	[-] do
+		[ ] sleep(2)
+		[ ] GeneXpertDx.SetupMenu.Click()
+		[ ] sleep(2)
+		[ ] GeneXpertDx.SetupMenu.SystemConfiguration.Click()
+	[-] except
+		[ ] LogError("Could not launch and get to System Configuration")
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] // Routine to be used to setup most data reduction protocols
+[-] appstate SetupStartup () basedon DXBaseState
+	[-] if !bConfigValues
+		[ ] GetConfigValues()
+	[ ] KillTask("ssms")
+	[ ] sleep (3)
+	[ ] 
+	[ ] BringWindowToTop(GeneXpertDx.GetHandle())
+	[ ] 
+	[-] if GeneXpertDx.LoginTextField.Exists(10)
+		[ ] GeneXpertDx.LoginTextField.SetText('cepheid')
+		[ ] GeneXpertDx.PasswordTextField.SetText(rConfig.sCepheidPassword)
+		[ ] sleep(2)
+		[ ] GeneXpertDx.OkButton.Click()
+		[ ] sleep(5)
+	[ ] 
+	[ ] // Wait for DB task reminder screen
+	[ ] BOOLEAN bErrorEncountered=false
+	[ ] 
+	[ ] // Choose to perform DB management
+	[-] if GeneXpertDx.YesButton.Exists(120)
+		[ ] GeneXpertDx.YesButton.Click()
+		[ ] 
+		[ ] //GeneXpertDx.SetActive( )
+		[ ] 
+		[ ] // Perform a restore
+		[-] if GeneXpertDx.DatabaseManagementDialog.DatabaseRestoreRadioButton.Exists(120)//DatabaseRestoreButton
+			[ ] sleep(5)
+			[ ] GeneXpertDx.DatabaseManagementDialog.DatabaseRestoreRadioButton.Click()
+			[ ] 
+			[ ] // confirm restore
+			[-] if GeneXpertDx.ProceedButton.Exists(120)
+				[ ] sleep(5)
+				[ ] GeneXpertDx.ProceedButton.Click()
+				[ ] 
+				[ ] // Choose NO to the backup prompt new to 6.3
+				[-] if GeneXpertDx.DatabaseRestoreDialog.CancelButton.Exists(120)
+					[ ] sleep(5)
+					[ ] GeneXpertDx.DatabaseRestoreDialog.CancelButton.Click()
+				[ ] 
+				[ ] // Select the file and confirm
+				[ ] GeneXpertDx.FileNameTextField.SetText( rConfig.sRestoreName)
+				[ ] print ("Attempting restore of {rConfig.sRestoreName}")
+				[ ] sleep(5)
+				[ ] GeneXpertDx.OpenButton.Click()
+				[ ] sleep(5)
+				[ ] 
+				[ ] GeneXpertDx.DatabaseRestoreDialog.ProceedButton.Click()
+				[ ] 
+				[ ] 
+				[ ] //GeneXpertDx.SetActive()
+				[ ] //
+				[ ] // Acknowledge the restored DB message
+				[-] if GeneXpertDx.NotificationTextArea.Exists(120)
+					[ ] // Check if there was an error
+					[ ] STRING sMsg=GeneXpertDx.NotificationTextArea.DynamicInvoke("getText")
+					[-] if MatchStr("*invalid database version*",sMsg)  || MatchStr("*could not read file*",sMsg)
+						[ ] LogError (sMsg)
+						[ ] bErrorEncountered=true
+					[-] else
+						[ ] print(sMsg)
+					[ ] //GeneXpertDx.SetActive()
+					[ ] sleep(5)
+					[ ] GeneXpertDx.OkButton.Click()
+					[ ] Agent.SetOption (OPT_VERIFY_EXPOSED, FALSE)
+			[ ] 
+			[-] if !bErrorEncountered
+				[ ] MyStartSystemConfiguration()
+				[ ] 
+				[-] if GeneXpertDx.SystemConfigurationWorkspace.Exists(120)
+					[ ] sleep(2)
+					[ ] GeneXpertDx.SystemConfigurationWorkspace.Click()
+					[ ] sleep(2)
+					[ ] GeneXpertDx.SystemConfigurationWorkspace.Tabs.Select(2)
+					[ ] sleep(2)
+					[ ] GeneXpertDx.ManualArchiveRadioButton.Select()
+					[ ] sleep(2)
+					[ ] GeneXpertDx.OkButton.Click()
+					[ ] sleep(2)
+					[ ] MyExit()
+					[ ] Agent.SetOption (OPT_VERIFY_EXPOSED, FALSE)
+	[ ] 
+[ ] 
+[ ] 
+[-] appstate StartDefineAssays () basedon DxBaseState
+	[-] do
+		[ ] GeneXpertDx.DefineAssaysButton.Click()
+		[ ] sleep(5)
+		[ ] 
+	[-] except
+		[ ] LogError("Could not launch and get to Manage Assays")
+[ ] 
+[-] appstate ViewResults () basedon DxBaseState
+	[-] do
+			[ ] //wMainWindow.RESULTS.Click() COMEBACK
+			[ ] sleep(3)
+			[ ] 
+	[-] except
+		[ ] LogError("Could not launch and get to Results Menu")
+	[ ] 
+[ ] 
+[-] appstate BackupStartup () basedon DxBaseState
+	[ ] sleep (3)
+	[ ] GeneXpertDx.SetActive( )
+	[ ] sleep (2)
+	[ ] //XpertiseLoginCepheid()
+	[ ] // GeneXpertDx.SetActive( )
+	[ ] // sleep (2)
+	[ ] // Exit with backup					start changes by EG
+	[ ] // GeneXpertDx.SetActive( )
+	[ ] // sleep (2)
+	[ ] GeneXpertDx.UserMenu.Click()
+	[ ] sleep (2)
+	[ ] GeneXpertDx.UserMenu.Exit.Click()
+	[ ] //									end changes by EG
+	[ ] 
+	[ ] // GeneXpertDx.ExitButton.Click()
+	[ ] sleep (2)
+	[ ] 
+	[ ] // When the Exit confirmation diaolog appears then click the OK button to confirm
+	[ ] // Changes for DX - EG
+	[ ] // Choose to perform DB management
+	[ ] // May 3, 2016 Start: Uncomment two following lines
+	[-] if GeneXpertDx.YesButton.Exists(120)
+		[ ] GeneXpertDx.YesButton.Click()
+		[ ] // 
+		[ ] // // Perform a backup
+		[-] // if GeneXpertDx.DatabaseManagementDialog.DatabaseRestoreRadioButton.Exists(120)//DatabaseBackupButton
+			[ ] // sleep(2)
+			[ ] // // GeneXpertDx.DatabaseManagementDialog.DatabaseRestoreRadioButton.Click()
+			[ ] // // 
+			[ ] // // confirm restore
+			[-] // if GeneXpertDx.ProceedButton.Exists(120)
+				[ ] // sleep(5)
+				[ ] // GeneXpertDx.ProceedButton.Click()
+	[ ] 
+	[ ] 
+	[-] // if GeneXpertDx.OkButton.Exists(20)
+		[ ] // GeneXpertDx.OkButton.Click()
+		[ ] sleep(2)
+	[ ] 
+	[-] if GeneXpertDx.NotificationTextArea.Exists(20)
+			[-] if MatchStr("*is overdue*",GeneXpertDx.NotificationTextArea.GetText())
+				[ ] sleep(2)
+				[ ] LogWarning("The test archive reminder appeared while shutting down during backup")
+				[ ] print(GeneXpertDx.NotificationTextArea.GetText())
+				[ ] wMainWindow.NoButton.Click()
+				[ ] sleep(2)
+	[ ] 
+	[ ] 
+	[ ] // Choose to perform DB management for backup operation
+	[ ] 
+	[-] // May 3, 2016 Start nserting code
+		[ ] // Perform a backup
+		[-] if GeneXpertDx.DatabaseManagementDialog.Exists(120)//Database Backup Radio Button must be selected by default according SRS.
+			[ ] 
+			[ ] // confirm backup
+			[-] if GeneXpertDx.ProceedButton.Exists(120)
+				[ ] sleep(5)
+				[ ] GeneXpertDx.ProceedButton.Click()
+	[ ] // May 3, 2016 End Inserting code
+	[ ] // May 3, 2016 Commented the following two lines
+	[-] // if wMainWindow.YesButton.Exists(100)
+		[ ] // wMainWindow.YesButton.Click()
+		[ ] 
+		[ ] GeneXpertDx.SetActive( )
+		[ ] 
+		[ ] 
+		[ ] // May 3, 2016 Start Comment 
+		[ ] // // Perform a backup
+		[-] // if wMainWindow.DatabaseBackupButton.Exists(100)
+			[ ] // sleep(5)
+			[ ] // Agent.SetOption (OPT_VERIFY_EXPOSED, FALSE)
+			[ ] // wMainWindow.DatabaseBackupButton.Click()
+			[ ] // May 3, 2016 End Comment 
+			[ ] // 
+			[ ] sleep(5)
+			[ ] GeneXpertDx.FileNameTextField.SetText( rConfig.sBackupName )
+			[ ] print("Set filename to backup to as {rConfig.sBackupName} ")
+			[ ] sleep(5)
+			[ ] GeneXpertDx.SaveButton.Click()
+			[ ] 
+			[ ] // Confirm overwrite if need be
+			[-] if GeneXpertDx.YesButton.Exists(30)
+				[ ] GeneXpertDx.SetActive()
+				[ ] sleep(5)
+				[ ] GeneXpertDx.YesButton.Click()
+				[ ] LogWarning("An existing file was overwritten")
+				[ ] sleep(2)
+			[ ] 
+			[ ] sleep(3)
+			[ ] GeneXpertDx.SetActive()
+			[ ] 
+			[ ] // Acknowledge the backup completed message message
+			[-] if GeneXpertDx.OkButton.Exists(120)
+				[ ] GeneXpertDx.SetActive()
+				[ ] sleep(5)
+				[ ] GeneXpertDx.OkButton.Click()
+				[ ] Print ("Backup has completed for '{rConfig.sBackupName }'")
+			[ ] 
+			[ ] // May 3, 2016 Start comment 
+			[-] // if GeneXpertDx.CloseButton.Exists(120)
+				[ ] // GeneXpertDx.SetActive()
+				[ ] // sleep(3)
+				[ ] // GeneXpertDx.CloseButton.Click()
+				[ ] // Print ("Leaving DB Managment")
+				[ ] // sleep(2)
+			[ ] // Agent.SetOption (OPT_VERIFY_EXPOSED, FALSE)
+			[ ] // May 3, 2016 End Comment
+			[ ] 
+			[ ] // May 3, 2016 Start Insert
+			[-] if GeneXpertDx.CancelButton.Exists(120)
+				[ ] // GeneXpertDx.SetActive()
+				[ ] sleep(3)
+				[ ] GeneXpertDx.CancelButton.Click()
+				[ ] Print ("Leaving DB Managment")
+				[ ] sleep(2)
+			[ ] // May 3, 2016 End insert
+[ ] 
+[ ] 
+[ ] 
+[-] MyExit()
+	[ ] // Set the application active and click the Exit button in the user menu
+	[ ] GeneXpertDx.SetActive( )
+	[ ] sleep (2)
+	[ ] GeneXpertDx.UserMenu.Click()
+	[ ] sleep (2)
+	[ ] GeneXpertDx.UserMenu.Exit.Click()
+	[ ] sleep (2)
+	[ ] 
+	[-] if GeneXpertDx.NotificationTextArea.Exists(20)
+		[+] if MatchStr("*is overdue*",GeneXpertDx.NotificationTextArea.DynamicInvoke("getText"))
+			[ ] Print("The test archive reminder appeared while shutting down")
+			[ ] print (GeneXpertDx.NotificationTextArea.DynamicInvoke("getText"))
+			[ ] GeneXpertDx.NoButton.Click()
+		[ ] 
+		[ ] 
+	[ ] // No to db tasks
+	[-] if GeneXpertDx.NoButton.Exists(20)
+		[ ] GeneXpertDx.NoButton.Click()
+		[ ] print("Dx has closed")
+[ ] 
+[ ] 
+[-] XpertiseLogin(STRING sUserID, STRING sPassWord)
+	[ ] GeneXpertDx.LoginButton.Click()
+	[ ] Sleep(1)
+	[ ] GeneXpertDx.LoginTextField.SetText(sUserID)
+	[ ] GeneXpertDx.PasswordTextField.SetText(sPassWord)
+	[ ] sleep(2)
+	[ ] GeneXpertDx.OkButton.Click()
+	[ ] sleep(5)
+	[ ] print()
+	[ ] print("Logged in as user {sUserID}")
+	[ ] print()
+	[ ] 
+	[-] if GeneXpertDx.NotificationTextArea.Exists(5)
+			[-] if MatchStr("*is overdue*",GeneXpertDx.NotificationTextArea.GetText())
+				[ ] sleep(2)
+				[ ] Print("The test archive reminder appeared after login")
+				[ ] print(GeneXpertDx.NotificationTextArea.GetText())
+				[ ] wMainWindow.NoButton.Click()
+				[ ] sleep(2)
+	[ ] 
+[ ] 
+[ ] 
+[ ] 
+[+] XpertiseLoginCepheid()
+	[ ] sleep(2)
+	[ ] XpertiseLogin ('cepheid', rConfig.sCepheidPassword)
+	[ ] sleep(2)
+	[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 
+[-] GetConfigValues(STRING sProjectNumber optional)
+	[ ] LIST OF STRING lsArgs
+	[ ] BOOLEAN status = 1
+	[ ] lsArgs = GetArgs ( ) 
+	[ ] INTEGER iPos = 0
+	[ ] 
+	[ ] // The first argument is the project number i.e. D2699
+	[-] if sProjectNumber==NULL
+		[ ] sProjectNumber = lsArgs[1]
+	[ ] print(sProjectNumber)
+	[ ] 
+	[ ] 
+	[ ] // Added the next 3 lines to read global variables from a startup file. Steve 5/3/2010
+	[ ] hdbc = DB_Connect (gsDSNConfig)
+	[ ] hConfig = DB_ExecuteSQL(hdbc, "Select * FROM `Config$`")
+	[ ] status = DB_FetchNext (hConfig, rConfig)
+	[ ] 
+	[ ] // The while loop is to loop through the lines in the ConfigMaster table until the correct project number is found
+	[-] while rConfig.sProjectNumber != sProjectNumber
+		[-] if status == FALSE
+			[ ] LogError('Project Number {sProjectNumber} is not found')
+			[ ] break
+		[-] else
+			[ ] status = DB_FetchNext (hConfig, rConfig)
+	[ ] 
+	[ ] // Change the value of the Cepheid password to remove the decimal i.e. .000000 of the read in value 
+	[ ] //iPos = StrPos(".", rConfig.sCepheidPassword)
+	[ ] //rConfig.sCepheidPassword = SubStr(rConfig.sCepheidPassword,1, iPos -1)
+	[ ] 
+	[ ] bConfigValues = true
+	[ ] DB_FinishSQL(hConfig)
+	[ ] DB_Disconnect(hdbc)
+	[ ] // print(rConfig)
+	[ ] 
+[ ] 
+[-] MyStartSetup()
+	[-] if !bConfigValues
+		[ ] GetConfigValues()
+	[ ] 
+	[ ] SetupStartup()
+	[ ] 
+	[-] if !bValidStart
+		[ ] @ ("$StopRunning") ()
+	[ ] 
+[ ] 
+[-] MyStartSystemConfiguration()
+	[-] if !bConfigValues
+		[ ] GetConfigValues()
+	[ ] 
+	[ ] SystemConfiguration()
+	[ ] 
+	[-] if !bValidStart
+		[ ] @ ("$StopRunning") ()
+	[ ] 
+[ ] 
+[-] MyStartDefineAssays()
+	[-] if !bConfigValues
+		[ ] GetConfigValues()
+	[ ] 
+	[ ] StartDefineAssays()
+	[ ] 
+	[-] if !bValidStart
+		[ ] @ ("$StopRunning") ()
+	[ ] 
+[ ] 
+[-] MyStartViewResults()
+	[-] if !bConfigValues
+		[ ] GetConfigValues()
+	[ ] 
+	[ ] ViewResults()
+	[ ] 
+	[-] if !bValidStart
+		[ ] @ ("$StopRunning") ()
+	[ ] 
+[ ] 
+[-] MyStartDataInjection ()
+	[-] if !bConfigValues
+		[ ] GetConfigValues()
+	[ ] 
+	[ ] DataInjectionBaseState()
+	[-] if !bValidStart
+		[ ] @ ("$StopRunning") ()
+	[ ] 
+	[ ] 
+	[ ] 
+[ ] 
+[-] MyStartTestSummary()
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] 
+	[ ] GetConfigValues("InfinityTestSummary")
+	[ ] 
+	[ ] TestSummaryBaseState()
+	[-] if !bValidStart
+		[ ] @ ("$StopRunning") ()
+	[ ] 
+[ ] 
+[ ] 
+[ ] 
+[ ] 

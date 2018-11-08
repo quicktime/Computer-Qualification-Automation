@@ -1,0 +1,81 @@
+﻿[ ] // New Record type for Test Result and Support tabs for GX Dx 4.7
+[-] type REC_RESULT is record
+	[ ] STRING sSampleID  // set to NA to skip verification
+	[ ] STRING sStatus 		 // set to NA to skip verification
+	[ ] STRING sErrorStatus   // set to NA to skip verification
+	[ ] STRING sAssayName  // set to NA to skip verification
+	[ ] STRING sResultText  // set to -9999 to skip verification
+	[ ] STRING sResultColor  // set to NA to skip verification
+	[ ] STRING sResultFont  // set to NA to skip verification
+	[ ] INTEGER iPosition 
+	[ ] STRING sDisclaimer  // set to NA-1 to skip verification
+	[ ] STRING sQuantUnit
+[ ] 
+[ ] 
+[ ] // New Record type for Analyte Result tab for GX Dx 4.7
+[-] type REC_DETAIL is record
+	[ ] STRING sAnalyteName // set to NA to skip verification
+	[ ] STRING sCartridge 	// set to NA to skip verification
+	[ ] STRING sCt			// set to NA to skip verification
+	[ ] STRING sEndPt		// set to NA to skip verification
+	[ ] STRING sInterpretationResult  // set to NA to skip verification
+	[ ] STRING sReason				// set to NA to skip verification
+	[ ] STRING sAnalyteResult		// set to NA-1 to skip verification
+	[ ] STRING sPrbChkResult		// set to -9999 to skip verification
+	[ ] STRING sTargetDeltaCt		// set to -9999 to skip verification
+	[ ] STRING sPrbChk1			// set to NA to skip verification
+	[ ] STRING sPrbChk2			// set to NA to skip verification
+	[ ] STRING sPrbChk3			// set to NA to skip verification
+	[ ] STRING sSecDerivPeakHght		// set to -9999 to skip verification
+	[ ] STRING sCurveFit				// set to NA to skip verification
+	[ ] STRING sMeltPeakTemp
+	[ ] STRING sMeltPeakHght
+	[ ] 
+	[ ] STRING sSampleID
+	[ ] 
+[ ] 
+[ ] 
+[ ] 
+[-] type REC_TEST_ERROR_MESSAGE is record
+	[ ] STRING sSampleID
+	[ ] STRING sPos
+	[ ] STRING sCartridge
+	[ ] STRING sDescription
+	[ ] STRING sDetails
+[ ] 
+[ ] 
+[ ] // New Record type for Test Result and Support tabs for GX Dx 4.7
+[-] type REC_RESULT_DISC is record
+	[ ] STRING sSampleID  // set to NA to skip verification
+	[ ] STRING sStatus 		 // set to NA to skip verification
+	[ ] STRING sErrorStatus   // set to NA to skip verification
+	[ ] STRING sAssayName  // set to NA to skip verification
+	[ ] STRING sResultText  // set to -9999 to skip verification
+	[ ] STRING sResultColor  // set to NA to skip verification
+	[ ] STRING sResultFont  // set to NA to skip verification
+	[ ] INTEGER iPosition 
+	[ ] STRING sDisclaimer1  // set to NA to skip verification
+	[ ] STRING sDisclaimer2 // set to NA to skip verification
+	[ ] STRING sDisclaimer3 // set to NA to skip verification
+	[ ] STRING sDisclaimer4 // set to NA to skip verification
+	[ ] STRING sDisclaimer5 // set to NA to skip verification
+	[ ] STRING sDisclaimer6 // set to NA to skip verification
+	[ ] STRING sDisclaimer7 // set to NA to skip verification
+[ ] 
+[ ] 
+[ ] 
+[+] type REC_LDA_TOTAL is record
+	[ ] STRING sSampleID	
+	[ ] STRING sCategoryName	
+	[ ] STRING sValidMin	
+	[ ] STRING sCutoff	
+	[ ] STRING sMaxValid	
+	[ ] STRING sTotal
+[ ] 
+[ ] // Used for error handling for D8383, D14863, D8381
+[-] type REC_ERROR is record
+	[ ] INTEGER iNum
+	[ ] STRING sDescription
+	[ ] STRING sDetails
+[ ] 
+[ ] 
