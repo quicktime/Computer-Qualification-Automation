@@ -486,7 +486,7 @@
 		[-] JButton SaveButton
 			[ ] locator "//JButton[@caption='Save']"
 	[ ] 
-	[-] JDialog Open
+	[+] JDialog Open
 		[ ] locator "/JDialog[@caption='Open']"
 		[-] JLabel LookIn
 			[ ] locator "//JLabel[@caption='Look In:']"
@@ -516,10 +516,6 @@
 			[ ] locator "//JButton[@caption='Cancel']"
 		[-] JButton OpenButton
 			[ ] locator "//JButton[@caption='Open']"
-		[-] JTextField FileName
-			[ ] locator "@priorlabel='File Name:'"
-		[-] JButton Open
-			[ ] locator "Open"
 	[ ] 
 	[-] JDialog SelectTestSToBeRetrievedWorkspace
 		[ ] locator "/JDialog[@caption='Select Test(s) To Be Retrieved From *']"
@@ -544,15 +540,12 @@
 		[ ] 
 		[ ] 
 	[ ] 
-	[-] JDialog RetrieveTestDuplicates
+	[+] JDialog RetrieveTestDuplicates
 		[ ] locator "/JDialog[@caption='Retrieve Test(s)']"
 		[-] JLabel DuplicateTestSSelectedText
 			[ ] locator "* duplicate test(s) selected for retrieve will be shown in red color."
 		[-] JButton OKButton
 			[ ] locator "//JButton[@caption='OK']"
-		[-] JButton Proceed
-			[ ] locator "Proceed"
-			[ ] 
 	[ ] 
 	[+] JDialog RetrieveTestConfirmation
 		[ ] locator "/JDialog[@caption='Retrieve Test(s)']"

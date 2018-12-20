@@ -1,0 +1,39 @@
+﻿[ ] //
+[ ] // General Constants
+[ ] //
+[ ] const NOENTRY = 'No Entry'
+[ ] const LOG_PATH = 'C:\GeneXpert\log\'
+[ ] 
+[ ] const DBBVALUE="-9999.9999"
+[ ] 
+[ ] const CEPHEID_USER = "cepheid"
+[ ] const CEPHEID_PW = "273172314"
+[ ] 
+[ ] const SUPPORT_USER = "support"
+[ ] 
+[ ] 
+[ ] //
+[ ] // Constants for View Results
+[ ] //
+[ ] const DEFAULT_TARGET_DELTA_CT = '-9999.000000'
+[ ] const ST_ERROR = 'Error'
+[ ] 
+[ ] const MELT_PEAKS_TAB = "Melt Peaks"
+[ ] 
+[ ] //
+[ ] // Constants used for verification Exported data
+[ ] //
+[ ] 
+[ ] const BASIC_USER_TYPE = "Basic"
+[ ] const DETAIL_USER_TYPE = "Detail"
+[ ] const ADMIN_USER_TYPE = "Admin"
+[ ] 
+[ ] //
+[ ] // Constants for Define Assays
+[ ] //
+[ ] 
+[ ] const SEMICOLON = ';'
+[ ] const BASIC_USER = 'jgreen'
+[ ] const BASIC_PASS = 'asdfasdf1'
+[ ] 
+[ ] // const wDynamicMainWindow = GeneXpertDxSystem

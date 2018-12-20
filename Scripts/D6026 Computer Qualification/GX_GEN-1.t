@@ -10,7 +10,7 @@
 [ ] // typical installation of product software; initial software launch without instrument; instrument recognition; instrument recovery; 
 [ ] // create user; login; define assay or protocol; create test; stop test; view results; export data; generate report.
 [ ] 
-[ ] use "..\Common Libraries\MasterUseStmts.inc"
+[ ] use "..\..\Common Libraries\MasterUseStmts.inc"
 [ ] 
 [-] testcase GEN() appstate none
 	[ ] 

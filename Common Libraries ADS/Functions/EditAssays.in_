@@ -1,0 +1,27 @@
+﻿[ ] use "..\..\Common Libraries ADS\MasterUseStmtsADS.inc"
+[ ] 
+[ ] // Edits an assay in ADK, saves it, checks the assay in Dx
+[-] EditAssay(STRING sAssayName)
+	[ ] ADK.SetActive()
+	[ ] ADK.Web.Browser.NewAssay_Name.SetText("{sAssayName}_DXADS")
+	[ ] print("Edited assay name to be: '{sAssayName}_DXADS'")
+	[ ] ADK.Web.Browser.Disclaimer.SetText("Edited the disclaimer, for DXADS_EditAssays.t")
+	[ ] print("Edited disclaimer to be: 'Edited the disclaimer, for DXADS_EditAssays.t'")
+	[ ] 
+	[ ] ADK.Web.Browser.Command_Sequence.Click()
+	[ ] //ADK.Web.Browser.CanSelect.Select(1)
+	[ ] //ADK.Web.Browser.CanSelect.Select(2)
+	[ ] ADK.Web.Browser.SelectallCommands.Select(1)
+	[ ] ADK.Web.Browser.SelectallCommands.Select(2)
+	[ ] ADK.Web.Browser.Save_Assay.Click()
+	[-] while ADK.Web.Browser.OkButton.exists()
+		[ ] ADK.Web.Browser.OkButton.Click()
+	[ ] 
+	[ ] GeneXpertDx.SetActive()
+	[ ] print("Switching to Dx")
+	[ ] GeneXpertDx.DefineAssays.Toggle()
+	[ ] GeneXpertDx.Refresh.Select()
+	[ ] LIST liResult = GeneXpertDx.AssayTable.FindCell("DEMO_{sAssayName}_DXADS")
+	[ ] GeneXpertDx.AssayTable.SelectRow(liResult[1])
+[ ] 
+[ ] EditAssayRecalc(STRING sAssayName)

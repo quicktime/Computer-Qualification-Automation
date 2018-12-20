@@ -1,0 +1,67 @@
+﻿[ ] use "..\..\Common Libraries ADS\MasterUseStmtsADS.inc"
+[ ] 
+[-] LIST AssayDataListADK()
+	[ ] LIST assayData
+	[ ] 
+	[ ] ListAppend(assayData, ADK.Web.Browser.NewAssay_Name.GetText())
+	[ ] //ListAppend(assayData, ADK.Web.Browser.Lot_Assay.GetText())
+	[ ] ListAppend(assayData, ADK.Web.Browser.Assay_Type.GetText())
+	[ ] //ListAppend(assayData, ADK.Web.Browser.Assay_Creator.GetText())
+	[ ] //ListAppend(assayData, ADK.Web.Browser.Assay_Created_Date.GetText())
+	[ ] ListAppend(assayData, ADK.Web.Browser.Last_Modified_Date.GetText())
+	[ ] 
+	[ ] return assayData
+	[ ] 
+[ ] 
+[-] LIST AssayDataListDx()
+	[ ] LIST assayData
+	[ ] 
+	[ ] // ListAppend(assayData, ADK.Web.Browser.NewAssay_Name.GetText())
+	[ ] // ListAppend(assayData, ADK.Web.Browser.Lot_Assay.GetText())
+	[ ] // ListAppend(assayData, ADK.Web.Browser.ColMd4PullLeft.GetText())
+	[ ] // ListAppend(assayData, ADK.Web.Browser.ColMd4PullLeft2.GetText())
+	[ ] // ListAppend(assayData, ADK.Web.Browser.ColMd4PullLeft3.GetText())
+	[ ] // ListAppend(assayData, ADK.Web.Browser.ColMd4PullLeft4.GetText())
+	[ ] 
+	[ ] return assayData
+	[ ] 
+[ ] 
+[-] LIST TestDataListASK()
+	[ ] ASK.SetActive()
+	[ ] LIST assayData
+	[ ] 
+	[ ] ListAppend(assayData, ASK.Web.Browser.TestTable_patientGx.GetText())
+	[ ] ListAppend(assayData, ASK.Web.Browser.TestTable_sampleId_c.GetText())
+	[ ] ListAppend(assayData, ASK.Web.Browser.TestTable_rgtLotId_c.GetText())
+	[ ] 
+	[ ] return assayData
+	[ ] 
+[ ] 
+[-] LIST TestDataListDx()
+	[ ] GeneXpertDx.SetActive()
+	[ ] STRING sReagentLotID
+	[ ] 
+	[ ] // Conditional for manually entered Reagent Lots (locator appends a '?')
+	[-] if GeneXpertDx.ReagentLotIDQ.exists()
+		[ ] sReagentLotID = GeneXpertDx.ReagentLotIDQ.Text
+	[-] else if GeneXpertDx.ReagentLotID.exists()
+		[ ] sReagentLotID = GeneXpertDx.ReagentLotID.Text
+	[-] else
+		[ ] sReagentLotID = ""
+	[ ] 
+	[ ] LIST testData
+	[ ] 
+	[ ] ListAppend(testData, GeneXpertDx.PatientID.Text)
+	[ ] ListAppend(testData, GeneXpertDx.SampleID.Text)
+	[ ] ListAppend(testData, sReagentLotID)
+	[ ] 
+	[ ] return testData
+	[ ] 
+[ ] 
+[-] LIST liFullTestDataListDx()
+	[ ] GeneXpertDx.SetActive()
+	[ ] LIST testData
+	[ ] 
+	[ ] 
+	[ ] return testData
+	[ ] 

@@ -13,7 +13,7 @@
 [ ] // and creation of reports using international characters.  International Languages are not applicable to Japanese computer systems, 
 [ ] // write N/A in the Pass and Fail columns of this test case.
 [ ] 
-[ ] use "..\Common Libraries\MasterUseStmts.inc"
+[ ] use "..\..\Common Libraries\MasterUseStmts.inc"
 [ ] 
 [-] testcase LANGUAGE() appstate none
 	[ ] 

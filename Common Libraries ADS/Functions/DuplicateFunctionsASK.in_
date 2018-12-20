@@ -1,0 +1,88 @@
+﻿[ ] use "..\..\Common Libraries ADS\MasterUseStmtsADS.inc"
+[ ] 
+[ ] // Searches for a test with the provided sampleID, checks it, and starts the duplicate test process
+[-] STRING DuplicateSingleTestFilteredBySampleID(STRING sSampleID)
+	[ ] STRING assayName
+	[ ] ASK.SetActive()
+	[ ] ASK.Web.Browser.DropDownMenu1.Click()
+	[ ] ASK.Web.Browser.Filter_By_SampleID.Click()
+	[ ] ASK.Web.Browser.SearchFilter_Textfield0.SetText(sSampleID)
+	[ ] ASK.Web.Browser.SelectCheck1.Check()
+	[ ] ASK.Web.Browser.DuplicateSelectedTests.Click()
+	[-] if ASK.Web.Browser.UseTheLotSpecific.exists()
+		[ ] ASK.Web.Browser.NextOnSelectAnalysis.Click()
+	[ ] ASK.Web.Browser.NextOnSelectTest.Click()
+	[ ] ASK.Web.Browser.NextToEnterAssayNameButton.Click()
+	[+] if ASK.Web.Browser.DuplicateSampleIDLabel.exists()
+		[ ] DuplicateSampleIDError()
+	[ ] ASK.Web.Browser.DuplicateButton.Click()
+	[-] if ASK.Web.Browser.backBtn.exists()
+		[ ] assayName = DuplicateSingleAssayNameError()
+		[ ] ASK.Web.Browser.DuplicateButton.Click()
+	[-] else
+		[ ] assayName = "ASSAY NOT RENAMED"
+	[ ] ASK.Web.Browser.BackToHomeButton.DomClick()
+	[ ] return assayName
+[ ] 
+[ ] // Searches for a test with 
+[-] STRING DuplicateMultipleTestsFilteredBySampleID(STRING sampleID)
+	[ ] STRING assayName
+	[ ] ASK.SetActive()
+	[ ] ASK.Web.Browser.DropDownMenu1.Click()
+	[ ] ASK.Web.Browser.Filter_By_SampleID.Click()
+	[ ] ASK.Web.Browser.SearchFilter_Textfield0.SetText(sampleID)
+	[ ] ASK.Web.Browser.SelectCheck1.Check()
+	[ ] ASK.Web.Browser.DuplicateSelectedTests.Click()
+	[ ] ASK.Web.Browser.DuplicateSelectedAssayTestsRadio.Click()
+	[ ] ASK.Web.Browser.NextOnSelectTest.Click()
+	[ ] ASK.Web.Browser.NextOnEnterAssayNameButton.Click()
+	[ ] ASK.Web.Browser.NextOnConfirmDuplicateButton.Click()
+	[ ] ASK.Web.Browser.NextOnEnterSIDPrefixButton.Click()
+	[ ] ASK.Web.Browser.NextOnSameSIDButton.Click()
+	[-] if ASK.Web.Browser.backBtn.exists()
+		[ ] assayName = DuplicateAssayNameError()
+	[ ] ASK.Web.Browser.BackToHomeButton.DomClick()
+	[ ] return assayName
+[ ] 
+[ ] 
+[ ] // If there is an error from having the same sampleID
+[+] DuplicateSampleIDError()
+	[ ] INT i = randint(0, 99999999999999999999)
+	[ ] STRING s = "copy_" + str(i)
+	[ ] ASK.Web.Browser.BackOnConfirmSIDButton.DomClick()
+	[ ] ASK.Web.Browser.SampleIDTextField.SetText(s)
+	[ ] ASK.Web.Browser.NextToEnterAssayNameButton.DomClick()
+	[ ] print("Generated Sample ID: " + s)
+[ ] 
+[ ] // If there is an error from having the same assay name in a single test duplication
+[+] STRING DuplicateSingleAssayNameError()
+	[ ] INT i = randint(0, 99999999999999999999)					// get random number
+	[ ] STRING s = "copy_" + str(i) + "_"{0}"						// set s to random number_{0}
+	[ ] ASK.Web.Browser.backBtn.DomClick()							// click backbtn
+	[ ] ASK.Web.Browser.AssayNameTextField.SetText(s)				// set assay to s
+	[ ] print("Generated Assay ID: " + s)
+	[ ] return s
+[ ] 
+[ ] // If there is an error from having the same assay name in a multiple test duplication
+[-] STRING DuplicateAssayNameError()
+		[ ] INT i = randint(0, 99999999999999999999)					// get random number
+		[ ] STRING s = "copy_" + str(i) + "_"{0}"						// set s to random number_{0}
+		[ ] ASK.Web.Browser.backBtn.DomClick()							// click backbtn
+		[ ] ASK.Web.Browser.BackOnEnterSIDPrefixButton.DomClick()		// click back
+		[ ] ASK.Web.Browser.BackOnConfirmDuplicateButton.DomClick()		// click back
+		[ ] ASK.Web.Browser.AssayNameTextField.SetText(s)				// set assay to s
+		[ ] ASK.Web.Browser.NextOnEnterAssayNameButton.Click()			// click next
+		[ ] ASK.Web.Browser.NextOnConfirmDuplicateButton.Click()		// click next
+		[ ] // ASK.Web.Browser.DuplicateButton.DomClick()					// click next
+		[ ] ASK.Web.Browser.NextOnEnterSIDPrefix.Click()
+		[ ] print("Generated Assay Name: " + s)
+		[ ] return s
+[ ] 
+[ ] // Duplicates a single test of the specified sampleID, returns assay name
+[-] STRING DuplicateTest(STRING sSampleID)
+	[ ] STRING assayName
+	[ ] ASK.SetActive()
+	[ ] ASK.Web.Browser.CheckAll.Check() // in case any tests are checked from previous runs or user, checks all tests
+	[ ] ASK.Web.Browser.CheckAll.Uncheck() // unchecks all test, effectively clearing all checkboxes
+	[ ] assayName = DuplicateSingleTestFilteredBySampleID(sSampleID)
+	[ ] return assayName

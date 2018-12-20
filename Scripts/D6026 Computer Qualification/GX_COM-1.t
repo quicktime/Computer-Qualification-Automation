@@ -9,7 +9,7 @@
 [ ] // Areas covered: 
 [ ] // instrument communication with the computer under test and recovery of communications in case of a break in the connection between the two.
 [ ] 
-[ ] use "..\Common Libraries\MasterUseStmts.inc"
+[ ] use "..\..\Common Libraries\MasterUseStmts.inc"
 [ ] 
 [-] testcase COM() appstate none
 	[ ] 

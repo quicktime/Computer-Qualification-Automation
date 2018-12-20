@@ -1,0 +1,202 @@
+﻿[ ] use "..\..\Common Libraries ADS\MasterUseStmtsADS.inc"
+[ ] 
+[ ] // This function will create a user
+[ ] // Arguments: User Name, Password, User Type
+[+] // CreateUser(STRING sUserName, STRING sPassword, STRING sUserType)
+	[ ] // 
+	[ ] // Agent.SetOption (OPT_VERIFY_EXPOSED, FALSE)
+	[ ] // 
+	[ ] // GeneXpertInfinity.HomeDashboardIcon.Click()
+	[ ] // sleep(1)
+	[ ] // GeneXpertInfinity.SetupButton.Click()
+	[ ] // sleep(1)
+	[ ] // GeneXpertInfinity.UserAdmininstrationButton.Click()
+	[ ] // sleep(1)
+	[ ] // GeneXpertInfinity.AddUserButton.Click()
+	[ ] // sleep(1)
+	[ ] // GeneXpertInfinity.LoginTextField.SetText(sUserName)
+	[ ] // 
+	[ ] // 
+	[ ] // GeneXpertInfinity.PasswordTextField.SetText(sPassword)
+	[ ] // GeneXpertInfinity.ConfirmPasswordTextField.SetText(sPassword)
+	[ ] // 
+	[ ] // GeneXpertInfinity.UserTypeComboBox.Select( sUserType )
+	[ ] // 
+	[ ] // GeneXpertInfinity.OkButton.Click()
+	[ ] // sleep(3)
+	[ ] // 
+	[ ] // 
+	[ ] // STRING sMsg=''
+	[-] // if GeneXpertInfinity.NotificationTextArea.Exists(10)
+		[ ] // sMsg=GeneXpertInfinity.NotificationTextArea.GetText()
+	[ ] // 
+	[-] // if MatchStr("*already exists.",sMsg)
+		[ ] // 
+		[ ] // LogWarning (sMsg)
+		[ ] // sleep(3)
+		[ ] // GeneXpertInfinity.OkButton.Click()
+		[ ] // sleep(2)
+		[ ] // GeneXpertInfinity.CancelButton.Click()
+	[ ] // 
+	[ ] // 
+	[ ] // print ()
+	[ ] // 
+	[ ] // 
+	[-] // if GeneXpertInfinity.OkButton.Exists(10)
+		[ ] // sleep(3)
+		[ ] // GeneXpertInfinity.OkButton.Click()
+		[ ] // print ("The user '{sUserName}' was reactivated.")
+	[ ] // 
+	[ ] // 
+	[ ] // 
+	[ ] // 
+	[ ] // Agent.SetOption (OPT_VERIFY_EXPOSED, TRUE)
+	[ ] // 
+[ ] 
+[ ] STRING ASKbin = "%ProgramW6432%\Cepheid\Assay Development Suite\ASK\bin\"
+[ ] STRING ADKbin = "%ProgramW6432%\Cepheid\Assay Development Suite\ADK\bin\"
+[ ] 
+[ ] // Closes the ASK application
+[-] CloseASK()
+	[ ] ASK.Web.Browser.Navbar_loginName.DomClick()
+	[ ] ASK.Web.Browser.Navbar_Exit.DomClick()
+	[ ] ASK.Web.Browser.YesButton.DomClick()
+[ ] 
+[ ] // Starts either ADS application
+[-] StartADS(WINDOW ADS)
+	[ ] STRING bin
+	[ ] STRING bat
+	[ ] 
+	[-] if ADS == ASK
+		[ ] bin = ASKbin
+		[ ] bat = "{bin}run_assay_support_kit.bat"
+	[-] if ADS == ADK
+		[ ] bin = ADKbin
+		[ ] bat = "{bin}run_assay_development_kit.bat"
+	[ ] ADS.Start(bat, bin)
+	[ ] Desktop.WaitForObject("//BUTTON[@id='loginForm_login']", 60)
+[ ] 
+[ ] // Starts either ADS application as uncloaked
+[-] StartUncloakedADS(WINDOW ADS)
+	[ ] STRING bin
+	[ ] STRING bat
+	[ ] 
+	[-] if ADS == ASK
+		[ ] bin = ASKbin
+		[ ] bat = "{bin}run_assay_support_kit.bat"
+	[-] if ADS == ADK
+		[ ] bin = ADKbin
+		[ ] bat = "{bin}run_unloaked_assay_support_kit.bat"
+	[ ] ADS.Start(bat, bin)
+	[ ] Desktop.WaitForObject("//BUTTON[@id='loginForm_login']", 60)
+[ ] 
+[ ] // Starts either ADS application with the "curve_fit" runtime parameter
+[-] StartCurveFitADS(WINDOW ADS)
+	[ ] STRING bin
+	[ ] STRING bat
+	[ ] 
+	[-] if ADS == ASK
+		[ ] bin = ASKbin
+		[ ] bat = "{bin}run_ask_curve_fit.bat"
+	[-] if ADS == ADK
+		[ ] bin = ADKbin
+		[ ] bat = "{bin}run_adk_curve_fit.bat"
+	[ ] ADS.Start(bat, bin)
+	[ ] //Desktop.WaitForObject("//BUTTON[@id='login']", 60)
+	[ ] Desktop.WaitForObject("//BUTTON[@id='loginForm_login']", 60)
+[ ] 
+[ ] // Starts either ADS application with the "engr" runtime parameter
+[-] StartEngrADS(WINDOW ADS)
+	[ ] STRING bin
+	[ ] STRING bat
+	[ ] 
+	[-] if ADS == ASK
+		[ ] bin = ASKbin
+		[ ] bat = "{bin}run_ask_curve_fit.bat"
+	[-] if ADS == ADK
+		[ ] bin = ADKbin
+		[ ] bat = "{bin}run_adk_curve_fit.bat"
+	[ ] ADS.Start(bat, bin)
+	[ ] //Desktop.WaitForObject("//BUTTON[@id='login']", 60)
+	[ ] Desktop.WaitForObject("//BUTTON[@id='loginForm_login']", 60)
+[ ] 
+[ ] // Starts either ADS application with the "show_target_quantitative_values" runtime parameter
+[-] StartQuantADS(WINDOW ADS)
+	[ ] STRING bin
+	[ ] STRING bat
+	[ ] 
+	[-] if ADS == ASK
+		[ ] bin = ASKbin
+		[ ] bat = "{bin}run_ask_quant.bat"
+	[-] if ADS == ADK
+		[ ] bin = ADKbin
+		[ ] bat = "{bin}run_adk_quant.bat"
+	[ ] ADS.Start(bat, bin)
+	[ ] //Desktop.WaitForObject("//BUTTON[@id='login']", 60)
+	[ ] Desktop.WaitForObject("//BUTTON[@id='loginForm_login']", 60)
+[ ] 
+[ ] // Starts either ADS application with the "resCorrOutput" runtime parameter
+[-] StartResCorrOutputADS(WINDOW ADS)
+	[ ] STRING bin
+	[ ] STRING bat
+	[ ] 
+	[-] if ADS == ASK
+		[ ] bin = ASKbin
+		[ ] bat = "{bin}run_ask_resCorrOutput.bat"
+	[-] if ADS == ADK
+		[ ] bin = ADKbin
+		[ ] bat = "{bin}run_adk_resCorrOutput.bat"
+	[ ] ADS.Start(bat, bin)
+	[ ] //Desktop.WaitForObject("//BUTTON[@id='login']", 60)
+	[ ] Desktop.WaitForObject("//BUTTON[@id='loginForm_login']", 60)
+[ ] 
+[ ] // Starts either ADS application with the "summaryCalc" runtime parameter
+[-] StartSummaryCalcADS(WINDOW ADS)
+	[ ] STRING bin
+	[ ] STRING bat
+	[ ] 
+	[-] if ADS == ASK
+		[ ] bin = ASKbin
+		[ ] bat = "{bin}run_ask_summaryCalc.bat"
+	[-] if ADS == ADK
+		[ ] bin = ADKbin
+		[ ] bat = "{bin}run_adk_summaryCalc.bat"
+	[ ] ADS.Start(bat, bin)
+	[ ] //Desktop.WaitForObject("//BUTTON[@id='login']", 60)
+	[ ] Desktop.WaitForObject("//BUTTON[@id='loginForm_login']", 60)
+[ ] 
+[ ] // Starts either ADS application with the "summaryCalc RecalculateWithOriginal" runtime parameter
+[-] StartSummaryCalcRecalcADS(WINDOW ADS)
+	[ ] STRING bin
+	[ ] STRING bat
+	[ ] 
+	[-] if ADS == ASK
+		[ ] bin = ASKbin
+		[ ] bat = "{bin}run_ask_summaryCalc_Recalc.bat"
+	[-] if ADS == ADK
+		[ ] bin = ADKbin
+		[ ] bat = "{bin}run_adk_summaryCalc_Recalc.bat"
+	[ ] ADS.Start(bat, bin)
+	[ ] //Desktop.WaitForObject("//BUTTON[@id='login']", 60)
+	[ ] Desktop.WaitForObject("//BUTTON[@id='loginForm_login']", 60)
+[ ] 
+[ ] // Checks if ADS is currently running. If it is, closes ADS and then runs uncloaked_ads. Then logs in
+[-] DefaultADSStartCheck(WINDOW ADS)
+	[-] if ADS.exists() // if ADS is already open,
+		[-] if ADS.Web.Browser.LoginButton.exists()
+			[ ] ADS.Exit()
+			[-] if ADS.Web.Browser.YesButton.exists()
+				[ ] ADS.Web.Browser.YesButton.DomClick()
+		[-] else
+			[ ] ADS.Exit()
+			[-] if ADS.Web.Browser.YesButton.exists()
+				[ ] ADS.Web.Browser.YesButton.DomClick()
+		[ ] 
+		[ ] StartUncloakedADS(ADS)
+	[ ] 
+	[+] if !ADS.exists()
+		[ ] StartUncloakedADS(ADS)
+	[ ] 
+	[ ] ADS.SetActive()
+	[ ] print("LoginCepheid(ADS)")
+	[ ] LoginCepheid(ADS)

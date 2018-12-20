@@ -17,6 +17,7 @@
 [ ] // Functions Files
 [ ] use "..\Common Libraries\functions\VerifyResultsDx.inc"
 [ ] use "..\Common Libraries\functions\VerifyExportFile.inc"
+[ ] use "..\Common Libraries\Functions\ManageAssays.inc"
 [ ] use "..\Common Libraries\Functions\ExportFunctions.inc"
 [ ] use "..\Common Libraries\Functions\Export Functions Dx.inc"
 [ ] use "..\Common Libraries\Functions\DataManagement.inc"
