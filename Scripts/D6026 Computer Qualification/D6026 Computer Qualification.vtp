@@ -4,13 +4,13 @@ Version=18.5
 Description=
 
 [ProjectProfile]
+ProjectIni=D6026 Computer Qualification.ini
 AccexIni=extend\accex.ini
 AttributesIni=extend\attributes.ini
-JavaexIni=extend\javaex.ini
-DomexIni=extend\domex.ini
 AxextIni=extend\axext.ini
-ProjectIni=D6026 Computer Qualification.ini
-
+DomexIni=extend\domex.ini
+JavaexIni=extend\javaex.ini
+EndFolder=TRUE
 [ProjectScript]
 Source=GX_COM-1.t
 Source=GX_CREATE-1.t
@@ -22,8 +22,20 @@ Source=GX_MATH-1.t
 Source=GX_SECURITY-1.t
 Source=GX_USER-1.t
 EndFolder=TRUE
-
 [ProjectFrame]
 Source=..\..\Common Libraries\MasterFrame.inc
 Source=..\..\Common Libraries\MasterUseStmts.inc
 EndFolder=TRUE
+[ProjectKeywordTests]
+EndFolder=TRUE
+[ProjectKeywords]
+EndFolder=TRUE
+[ProjectPlan]
+EndFolder=TRUE
+[ProjectResults]
+EndFolder=TRUE
+[ProjectData]
+EndFolder=TRUE
+[GlobalTVSettings]
+ShowFullPath=FALSE
+ShowDateTime=FALSE
