@@ -116,40 +116,42 @@
 	[ ] //Dialogs
 	[+] JDialog DatabaseManagementDialog
 		[ ] locator "/JDialog[@caption='Database Management']"
-		[-] JButton YesButton // added by JG 8/14/17
+		[+] JButton YesButton // added by JG 8/14/17
 			[ ] locator "//JButton[@caption='Yes']"
-		[-] JButton NoButton// added by JG 8/14/17
+		[+] JButton NoButton// added by JG 8/14/17
 			[ ] locator "//JButton[@caption='No']"
 			[ ] 
 		[ ] 
-		[-] JLabel SelectTaskLabel
+		[+] JLabel SelectTaskLabel
 			[ ] locator "//JLabel[@caption='Select task, click [Proceed] to continue.']"
 		[ ] 
-		[-] JRadioButton DatabaseBackupRadioButtom
+		[+] JRadioButton DatabaseBackupRadioButtom
 			[ ] locator "//[@caption='Database Backup']"
 		[ ] 
-		[-] JRadioButton DatabaseRestoreRadioButton
+		[+] JRadioButton DatabaseRestoreRadioButton
 			[ ] locator "//JRadioButton[@caption='Database Restore']"
 		[ ] 
-		[-] JRadioButton CompactDatabaseRadioButtom
+		[+] JRadioButton CompactDatabaseRadioButtom
 			[ ] locator "//[@caption='Compact Database']"
 		[ ] 
-		[-] JRadioButton CheckDatabaseIntegrityRadioButtom
+		[+] JRadioButton CheckDatabaseIntegrityRadioButtom
 			[ ] locator "//[@caption='Check Database Integrity']"
 		[ ] 
-		[-] // JButton ProceedButton
+		[+] // JButton ProceedButton
 			[ ] // locator "//JButton[@caption='Proceed']"
 		[ ] 
-		[-] JButton ProceedButton
+		[+] JButton ProceedButton
 			[ ] locator "//JButton[@caption='Proceed']"
 		[ ] // /JFrame[@caption='GeneXpert® Dx System']/JDialog[@caption='Database Management']//JButton[@caption='Proceed']
-		[-] JButton CancelButton
+		[+] JButton CancelButton
 			[ ] locator "//JButton[@caption='Cancel']"
 		[ ] 
 		[ ] 
 		[ ] 
 		[ ] 
 		[ ] 
+		[-] JButton No
+			[ ] locator "No"
 	[+] JDialog ScanCartridgeBarcodeDialog // Added Dialog Identifier and Button JG 7/31/17
 		[ ] locator "//JDialog[@caption='Scan Cartridge Barcode']" //end of addition
 		[ ] 
@@ -1329,6 +1331,41 @@
 	[ ] 
 	[+] JButton SaveChanges
 		[ ] locator "Save Changes"
+	[-] JDialog StopTestDialog
+		[ ] locator "/JDialog[@caption='Stop Test']"
+		[+] JPanel Panel
+			[ ] locator "/JPanel"
+		[+] JLabel Modules
+			[ ] locator "Modules"
+		[+] JScrollPane ScrollPane
+			[ ] locator "//JScrollPane"
+		[+] JViewport Viewport
+			[ ] locator "//JViewport"
+		[+] JTable JTableSorted
+			[ ] locator "@className='JTableSorted'"
+		[+] JViewport Viewport2
+			[ ] locator "[2]"
+		[+] JTableHeader TableHeader
+			[ ] locator "//JTableHeader"
+		[+] JPanel Panel2
+			[ ] locator "/JPanel/JPanel"
+		[+] JPanel Panel3
+			[ ] locator "/JPanel/JPanel/JPanel"
+		[+] JButton SelectRunning
+			[ ] locator "Select Running"
+		[+] JButton DeselectAll
+			[ ] locator "Deselect All"
+		[+] JPanel Panel4
+			[ ] locator "/JPanel/JPanel/JPanel[2]"
+		[-] JButton Stop
+			[ ] locator "Stop"
+		[+] JButton Cancel
+			[ ] locator "Cancel"
+	[+] JDialog TestArchiveReminder
+		[ ] locator "/JDialog[@caption='Test Archive Reminder']"
+		[-] JButton No
+			[ ] locator "No"
+[ ] 
 [ ] 
 [ ] 
 [+] window MainWin AdobeReader

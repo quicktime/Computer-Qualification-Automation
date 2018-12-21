@@ -123,7 +123,7 @@
 		[ ] LogError(pattern + " is not in the Test Summary!")
 [ ] 
 [ ] // Determines whether the file's content headers match with the passed-in headers list
-[-] TestSummaryHeaders(STRING fileName, LIST lListName)
+[+] TestSummaryHeaders(STRING fileName, LIST lListName)
 	[ ] STRING sLine // String to hold the specified line
 	[ ] STRING sField // String to hold the found field
 	[ ] STRING sHeader // String to hold lListNames headers

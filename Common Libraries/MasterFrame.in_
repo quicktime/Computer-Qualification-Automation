@@ -486,7 +486,7 @@
 		[-] JButton SaveButton
 			[ ] locator "//JButton[@caption='Save']"
 	[ ] 
-	[+] JDialog Open
+	[-] JDialog Open
 		[ ] locator "/JDialog[@caption='Open']"
 		[-] JLabel LookIn
 			[ ] locator "//JLabel[@caption='Look In:']"
@@ -516,6 +516,10 @@
 			[ ] locator "//JButton[@caption='Cancel']"
 		[-] JButton OpenButton
 			[ ] locator "//JButton[@caption='Open']"
+		[-] JTextField FileName
+			[ ] locator "@priorlabel='File Name:'"
+		[-] JButton Open
+			[ ] locator "Open"
 	[ ] 
 	[-] JDialog SelectTestSToBeRetrievedWorkspace
 		[ ] locator "/JDialog[@caption='Select Test(s) To Be Retrieved From *']"
@@ -540,12 +544,15 @@
 		[ ] 
 		[ ] 
 	[ ] 
-	[+] JDialog RetrieveTestDuplicates
+	[-] JDialog RetrieveTestDuplicates
 		[ ] locator "/JDialog[@caption='Retrieve Test(s)']"
 		[-] JLabel DuplicateTestSSelectedText
 			[ ] locator "* duplicate test(s) selected for retrieve will be shown in red color."
 		[-] JButton OKButton
 			[ ] locator "//JButton[@caption='OK']"
+		[-] JButton Proceed
+			[ ] locator "Proceed"
+			[ ] 
 	[ ] 
 	[+] JDialog RetrieveTestConfirmation
 		[ ] locator "/JDialog[@caption='Retrieve Test(s)']"
@@ -1322,6 +1329,37 @@
 	[ ] 
 	[+] JButton SaveChanges
 		[ ] locator "Save Changes"
+	[-] JDialog StopTestDialog
+		[ ] locator "/JDialog[@caption='Stop Test']"
+		[+] JPanel Panel
+			[ ] locator "/JPanel"
+		[+] JLabel Modules
+			[ ] locator "Modules"
+		[+] JScrollPane ScrollPane
+			[ ] locator "//JScrollPane"
+		[+] JViewport Viewport
+			[ ] locator "//JViewport"
+		[+] JTable JTableSorted
+			[ ] locator "@className='JTableSorted'"
+		[+] JViewport Viewport2
+			[ ] locator "[2]"
+		[+] JTableHeader TableHeader
+			[ ] locator "//JTableHeader"
+		[+] JPanel Panel2
+			[ ] locator "/JPanel/JPanel"
+		[+] JPanel Panel3
+			[ ] locator "/JPanel/JPanel/JPanel"
+		[+] JButton SelectRunning
+			[ ] locator "Select Running"
+		[+] JButton DeselectAll
+			[ ] locator "Deselect All"
+		[+] JPanel Panel4
+			[ ] locator "/JPanel/JPanel/JPanel[2]"
+		[-] JButton Stop
+			[ ] locator "Stop"
+		[+] JButton Cancel
+			[ ] locator "Cancel"
+[ ] 
 [ ] 
 [ ] 
 [+] window MainWin AdobeReader

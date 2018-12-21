@@ -29,6 +29,7 @@
 	[ ] // STEP 3
 	[ ] // Stop the test.
 	[ ] //   The test shall stop. The Maintenance screen shall still display the modules connected and there shall be no exceptions in the DOS window.
+	[ ] StopTest("test1")
 	[ ] 
 	[ ] // STEP 4
 	[ ] // Connect the maximum number of GeneXperts to the computer and launch the software (in DOS mode).
@@ -39,8 +40,12 @@
 	[ ] // Start tests on all available sites that will run for at least 10 minutes. One minute into the tests, disconnect the communication cables
 	[ ] // from all instruments.
 	[ ] //   The test shall start. The software shall report a loss of communications when the cable is unplugged.
+	[ ] Sleep(100)
+	[ ] DisableEthernet("GeneXpert Connection")
 	[ ] 
 	[ ] // STEP 6
 	[ ] // Wait five minutes and then reconnect the communication cables to the instruments.
 	[ ] //   The data collection for each of the GeneXpert units shall resume. Upon reconnection, the normal process will continue.
+	[ ] Sleep(300)
+	[ ] EnableEthernet("GeneXpert Connection")
 [ ] 

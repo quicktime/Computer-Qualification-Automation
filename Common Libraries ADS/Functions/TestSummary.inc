@@ -1,7 +1,8 @@
 ﻿[ ] use "..\..\Common Libraries ADS\MasterUseStmtsADS.inc"
+[ ] use "..\..\Common Libraries\MasterUseStmts.inc"
 [ ] 
 [ ] // Generates a test summary based on the passed in booleans
-[+] STRING GenerateTestSummary(STRING sampleID, STRING fileName, BOOLEAN analyte, BOOLEAN probeCheck)
+[-] STRING GenerateTestSummary(STRING sampleID, STRING fileName, BOOLEAN analyte, BOOLEAN probeCheck)
 	[ ] STRING filePath
 	[ ] 
 	[ ] ASK.SetActive()

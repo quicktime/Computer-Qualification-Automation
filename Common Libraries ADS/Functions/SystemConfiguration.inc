@@ -55,6 +55,27 @@
 [ ] 
 [ ] STRING ASKbin = "%ProgramW6432%\Cepheid\Assay Development Suite\ASK\bin\"
 [ ] STRING ADKbin = "%ProgramW6432%\Cepheid\Assay Development Suite\ADK\bin\"
+[ ] STRING Dxbin = "%ProgramW6432%\Cepheid\GeneXpert Dx\Dx\bin\"
+[ ] 
+[ ] // Starts Dx
+[-] StartDX()
+	[ ] STRING bat = "{Dxbin}run_nova.bat"
+	[ ] GeneXpertDx.Start(bat, Dxbin)
+	[ ] Desktop.WaitForObject("//JButton[@caption='Create Test']")
+[ ] 
+[ ] // Closes the Dx application
+[-] CloseDx()
+	[ ] GeneXpertDx.Close()
+	[ ] GeneXpertDx.TestArchiveReminder.No.Select()
+	[ ] GeneXpertDx.DatabaseManagementDialog.No.Select()
+[ ] 
+[ ] // Disables the specified ethernet adapter
+[-] DisableEthernet(STRING sAdapter)
+	[ ] SYS_Execute("wmic path win32_networkadapter where NetConnectionID={sAdapter} call disable")
+[ ] 
+[ ] // Enables the specified ethernet adapter
+[-] EnableEthernet(STRING sAdapter)
+	[ ] SYS_Execute("wmic path win32_networkadapter where NetConnectionID={sAdapter} call enable")
 [ ] 
 [ ] // Closes the ASK application
 [-] CloseASK()

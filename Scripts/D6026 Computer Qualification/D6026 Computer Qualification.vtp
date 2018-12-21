@@ -23,6 +23,9 @@ Source=GX_SECURITY-1.t
 Source=GX_USER-1.t
 EndFolder=TRUE
 [ProjectFrame]
+Source=..\..\Common Libraries ADS\constants\Constants-ADS.inc
+Source=..\..\Common Libraries\constants\Constants.inc
+Source=..\..\Common Libraries\Functions\ComputerQualificationFunctions.inc
 Source=..\..\Common Libraries\Functions\SystemConfiguration.inc
 Source=..\..\Common Libraries\Functions\TestSummary.inc
 Source=..\..\Common Libraries\MasterFrame.inc

@@ -23,3 +23,4 @@
 [ ] use "..\Common Libraries\Functions\TestReport.inc"
 [ ] use "..\Common Libraries\functions\ViewResults.inc"
 [ ] use "..\Common Libraries\functions\PerformanceFunctions.inc"
+[ ] use "..\Common Libraries\Functions\ComputerQualificationFunctions.inc"
